@@ -68,5 +68,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/genButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="generate password"
+        app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
+        tools:layout_editor_absoluteX="0dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

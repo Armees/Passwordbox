@@ -3,6 +3,8 @@ package com.example.passwordbox
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -17,15 +19,15 @@ import java.io.File
 class MainActivity : AppCompatActivity() {//регистрация
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    val fileName = File(applicationContext.filesDir, "password.txt")
-    if (!fileName.exists()) {
-        fileName.createNewFile()
-        newpassword()
-    } else {//если пароль уже создан
-        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val password = sharedPreferences.getString("password", null)
-        chekpassword(password!!)
-    }
+        val fileName = File(applicationContext.filesDir, "password.txt")
+        if (!fileName.exists()) {
+            fileName.createNewFile()
+            newPassword()
+        } else {//если пароль уже создан
+            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val password = sharedPreferences.getString("password", "")
+            chekPassword(password!!)
+        }
     }
 
 
@@ -46,6 +48,11 @@ class MainActivity : AppCompatActivity() {//регистрация
             val editText3 = findViewById<EditText>(R.id.editText3)
             val saveButton = findViewById<Button>(R.id.saveButton)
             val cancelButton2 = findViewById<Button>(R.id.cancelButton2)
+            val genButton = findViewById<Button>(R.id.genButton)
+
+            genButton.setOnClickListener {
+                editText3.setText(generatePassword())
+            }
 
             saveButton.setOnClickListener {
                 val password = editText3.text.toString()
@@ -82,6 +89,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         val savedtext = fileName.readText()
         val arr = ArrayList<String>()
 
+
         arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
         listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr)
 
@@ -90,12 +98,17 @@ class MainActivity : AppCompatActivity() {//регистрация
             setContentView(R.layout.activity_edit)
             val cancelButton2 = findViewById<Button>(R.id.cancelButton2)
             val deleteButton2 = findViewById<Button>(R.id.deleteButton2)
+            val website = findViewById<Button>(R.id.website)
             val editButton = findViewById<Button>(R.id.editButton)
             val listView1 = findViewById<ListView>(R.id.listView1)
             val arr1 = ArrayList<String>()
 
             arr1.addAll(arr.get(position).dropLast(1).split("\n"))
             listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr1)//новый список(надо добавить отдельное редоктирование каждой строки)
+
+            website.setOnClickListener{
+                openInBrowser(arr1 [1])
+            }
 
             editButton.setOnClickListener{//изменение текста
                 setContentView(R.layout.activity_addnew)
@@ -106,6 +119,12 @@ class MainActivity : AppCompatActivity() {//регистрация
                 val editText3 = findViewById<EditText>(R.id.editText3)
                 val saveButton = findViewById<Button>(R.id.saveButton)
                 val cancelButton2 = findViewById<Button>(R.id.cancelButton2)
+                val genButton = findViewById<Button>(R.id.genButton)
+
+                genButton.setOnClickListener {
+                    editText3.setText(generatePassword())
+                }
+
 
                 editText.setText(arr1 [0])
                 editText1.setText(arr1 [1])
@@ -125,7 +144,7 @@ class MainActivity : AppCompatActivity() {//регистрация
                     arr1 [3]=password
 
                     arr [position]=arr1 [0] +"\n"+ arr1 [1]+"\n"+ arr1 [2]+"\n"+ arr1 [3]+"\n"
-                    PasswordFile(arr)
+                    passwordFile(arr)
 
                     editText.text.clear()
                     editText1.text.clear()
@@ -153,7 +172,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
                 deleteButton.setOnClickListener {
                     arr.removeAt(position)
-                    PasswordFile(arr)
+                    passwordFile(arr)
                     setupPasswordSaving()
                 }
                 cancelButton.setOnClickListener {
@@ -174,7 +193,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
-    private fun PasswordFile(arr: List<String>) {//сохранение изменений
+    private fun passwordFile(arr: List<String>) {//сохранение изменений
         val fileName = File(applicationContext.filesDir, "password.txt")
         fileName.writeText(arr.joinToString(""))
     }
@@ -189,6 +208,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, "text copy",Toast.LENGTH_SHORT).show()
     }
+
 
 
 
@@ -210,20 +230,20 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
-    private fun chekpassword(password1: String) {//проерка пароля
+
+    private fun chekPassword(password1: String) {//проерка пароля
         setContentView(R.layout.activity_main)
         val etPwd = findViewById<EditText>(R.id.editTextNumberPassword)
         val btnCheckPassword = findViewById<Button>(R.id.button)
         btnCheckPassword.setOnClickListener {
             val text1 = etPwd.text.toString()
             if (text1 == password1) {
-
                 setupPasswordSaving()
             }else {
                 setContentView(R.layout.activity_false)
                 val btnTryAgain = findViewById<Button>(R.id.btnTryAgain)
                 btnTryAgain.setOnClickListener {
-                    chekpassword(password1)
+                    chekPassword(password1)
                 }
             }
         }
@@ -232,7 +252,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
-    private fun newpassword() {//создание пароля
+    private fun newPassword() {//создание пароля
         setContentView(R.layout.activity_new)
         val etPwd2 = findViewById<EditText>(R.id.editTextNumberPassword2)
         val btnCheckPassword2 = findViewById<Button>(R.id.button2)
@@ -244,7 +264,31 @@ class MainActivity : AppCompatActivity() {//регистрация
             val password = etPwd2.text.toString()
             editor.putString("password", password)
             editor.apply()
-            chekpassword(password)
+            chekPassword(password)
         }
+    }
+
+
+
+    private fun generatePassword(): String {//сгенерировать сложный пароль
+        val rand = ('A'..'Z') + ('a'..'z') + ('0'..'9')+'!'+'#'+'$'+'%'+'&'+'/'+'@'
+        var hardpass=""
+        for(i in 0..20){
+            hardpass=hardpass+rand.random()
+        }
+        return hardpass
+    }
+
+
+
+    fun openInBrowser(url: String) {//открыть ссылку в браузере
+        val formattedUrl = if(url.contains("http://") ||url.contains("https://")){
+            url
+        }
+        else{
+            "http://"+url
+        }
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(formattedUrl))
+        startActivity(browserIntent)
     }
 }
