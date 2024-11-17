@@ -9,11 +9,17 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
+import android.graphics.Bitmap
+import android.graphics.Color
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {//регистрация
@@ -100,6 +106,7 @@ class MainActivity : AppCompatActivity() {//регистрация
             val deleteButton2 = findViewById<Button>(R.id.deleteButton2)
             val website = findViewById<Button>(R.id.website)
             val editButton = findViewById<Button>(R.id.editButton)
+            val shareButton = findViewById<Button>(R.id.shareButton)
             val listView1 = findViewById<ListView>(R.id.listView1)
             val arr1 = ArrayList<String>()
 
@@ -108,6 +115,10 @@ class MainActivity : AppCompatActivity() {//регистрация
 
             website.setOnClickListener{
                 openInBrowser(arr1 [1])
+            }
+
+            shareButton.setOnClickListener{
+                share(arr1);
             }
 
             editButton.setOnClickListener{//изменение текста
@@ -190,6 +201,35 @@ class MainActivity : AppCompatActivity() {//регистрация
         }
     }
 
+    private fun share(arr1: List<String>){
+        setContentView(R.layout.activity_qrcode)
+        val qrIV = findViewById<ImageView>(R.id.IVQrcode)
+        val cancelButton3 = findViewById<Button>(R.id.cancelButton3)
+        val msgEdt=arr1.joinToString(separator = "\n")
+        cancelButton3.setOnClickListener {
+            setupPasswordSaving()
+        }
+        try {
+
+            val writer = QRCodeWriter()
+            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, 300, 300)
+            val pixels = IntArray(300 * 300)
+
+            for (y in 0 until 300) {
+                val offset = y * 300
+                for (x in 0 until 300) {
+                    pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
+                }
+            }
+
+            val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565)
+            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300)
+            qrIV.setImageBitmap(bitmap)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
 
 

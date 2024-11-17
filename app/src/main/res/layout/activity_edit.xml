@@ -7,8 +7,8 @@
 
     <ListView
         android:id="@+id/listView1"
-        android:layout_width="404dp"
-        android:layout_height="521dp"
+        android:layout_width="403dp"
+        android:layout_height="469dp"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="3dp" />
 
@@ -53,4 +53,13 @@
         android:text="edit"
         app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
         tools:layout_editor_absoluteX="1dp" />
+
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="408dp"
+        android:layout_height="53dp"
+        android:text="share"
+        app:layout_constraintBottom_toTopOf="@+id/website"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
