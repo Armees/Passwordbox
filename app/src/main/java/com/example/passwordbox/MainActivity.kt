@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
                 editText.setText(arr1 [0])
                 editText1.setText(arr1 [1])
-                editText2.setText(arr1 [2])
+                editText2.setText(arr1 [2])//
                 editText3.setText(arr1 [3])
 
 
