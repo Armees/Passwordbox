@@ -201,32 +201,32 @@ class MainActivity : AppCompatActivity() {//регистрация
         }
     }
 
-    private fun share(arr1: List<String>){
+    private fun share(arr1: List<String>){//вункция деления с помошью qr кода
         setContentView(R.layout.activity_qrcode)
         val qrIV = findViewById<ImageView>(R.id.IVQrcode)
         val cancelButton3 = findViewById<Button>(R.id.cancelButton3)
-        val msgEdt=arr1.joinToString(separator = "\n")
-        cancelButton3.setOnClickListener {
+        val msgEdt=arr1.joinToString(separator = "\n")//преврашение масива в строку
+        cancelButton3.setOnClickListener {//кнопка для закрытия qr rкода
             setupPasswordSaving()
         }
         try {
 
-            val writer = QRCodeWriter()
-            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, 300, 300)
-            val pixels = IntArray(300 * 300)
+            val writer = QRCodeWriter()// Создается объект, который используется для генерации QR-кодов.
+            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, 300, 300)// генрация матрицы qr кода
+            val pixels = IntArray(300 * 300)//массив целых чисел для хранения цветов каждого пикселя изображения QR-кода
 
-            for (y in 0 until 300) {
+            for (y in 0 until 300) {// проходим по каждому элементу масива и определяем какого цвета должен быть пиксель
                 val offset = y * 300
                 for (x in 0 until 300) {
                     pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
                 }
             }
 
-            val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565)
-            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300)
-            qrIV.setImageBitmap(bitmap)
+            val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565)//бъект размером 300x300 пикселей с использованием конфигурации RGB_565 (каждый пиксель кодируется 16 битами).
+            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300)// из массива получаем картинку qr кода
+            qrIV.setImageBitmap(bitmap)// отображение qr кода
 
-        } catch (e: Exception) {
+        } catch (e: Exception) {//вывод ошибок
             e.printStackTrace()
         }
     }
