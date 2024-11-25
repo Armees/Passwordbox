@@ -52,7 +52,8 @@
         android:layout_height="53dp"
         android:text="edit"
         app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
-        tools:layout_editor_absoluteX="1dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/shareButton"

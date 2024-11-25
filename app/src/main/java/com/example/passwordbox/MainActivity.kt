@@ -21,7 +21,6 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import java.util.*
 
-
 class MainActivity : AppCompatActivity() {//регистрация
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +42,10 @@ class MainActivity : AppCompatActivity() {//регистрация
         setContentView(R.layout.activity_verify)
         val fileName = File(applicationContext.filesDir, "password.txt")
         val addNewButton = findViewById<Button>(R.id.addNewButton)
+        val KeyManager= KeyManager("TEST")
+
+//        fileName.writeText(KeyManager.encrypt(fileName.readText()))//проверка зашифровки
+//        fileName.writeText(KeyManager.decrypt(fileName.readText()))//проверка расшифровки
 
         listSaving()
         addNewButton.setOnClickListener {
@@ -120,7 +123,6 @@ class MainActivity : AppCompatActivity() {//регистрация
             shareButton.setOnClickListener{
                 share(arr1);
             }
-
             editButton.setOnClickListener{//изменение текста
                 setContentView(R.layout.activity_addnew)
 
@@ -200,6 +202,8 @@ class MainActivity : AppCompatActivity() {//регистрация
 
         }
     }
+
+
 
     private fun share(arr1: List<String>){//вункция деления с помошью qr кода
         setContentView(R.layout.activity_qrcode)
@@ -304,7 +308,7 @@ class MainActivity : AppCompatActivity() {//регистрация
             val password = etPwd2.text.toString()
             editor.putString("password", password)
             editor.apply()
-            chekPassword(password)
+            setupPasswordSaving()
         }
     }
 
