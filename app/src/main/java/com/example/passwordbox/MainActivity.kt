@@ -4,8 +4,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -14,12 +17,16 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import java.io.File
-import android.graphics.Bitmap
-import android.graphics.Color
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
+import java.io.File
 import java.util.*
+
+
+//        val KeyManager= KeyManager(keyAlias())
+//
+//        fileName.writeText(KeyManager.encrypt(fileName.readText()))// зашифровка
+//        fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
 
 class MainActivity : AppCompatActivity() {//регистрация
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,16 +43,19 @@ class MainActivity : AppCompatActivity() {//регистрация
     }
 
 
+    private fun keyAlias():String {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val keyAlias = sharedPreferences.getString("password", "")
+        return keyAlias!!
+    }
+
+
 
 
     private fun setupPasswordSaving() {//сохранение новых паролей
         setContentView(R.layout.activity_verify)
         val fileName = File(applicationContext.filesDir, "password.txt")
         val addNewButton = findViewById<Button>(R.id.addNewButton)
-        val KeyManager= KeyManager("TEST")
-
-//        fileName.writeText(KeyManager.encrypt(fileName.readText()))//проверка зашифровки
-//        fileName.writeText(KeyManager.decrypt(fileName.readText()))//проверка расшифровки
 
         listSaving()
         addNewButton.setOnClickListener {
@@ -69,10 +79,15 @@ class MainActivity : AppCompatActivity() {//регистрация
                 val url = editText1.text.toString()
                 val name = editText.text.toString()
 
+                val KeyManager= KeyManager(keyAlias())
+                fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
+
                 fileName.appendText(name + "\n")
                 fileName.appendText(url + "\n")
                 fileName.appendText(login + "\n")
                 fileName.appendText(password + "\n")
+
+                fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
 
                 editText.text.clear()
                 editText1.text.clear()
@@ -95,12 +110,18 @@ class MainActivity : AppCompatActivity() {//регистрация
 
         val listView = findViewById<ListView>(R.id.listView)
         val fileName = File(applicationContext.filesDir, "password.txt")
-        val savedtext = fileName.readText()
         val arr = ArrayList<String>()
 
+        val KeyManager= KeyManager(keyAlias())
+        fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
 
+        val savedtext = fileName.readText()
         arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
-        listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr)
+
+        val arr2=hidePassword(arr)
+        listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr2)
+
+        fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
 
         //нажатие на элемент списка
         listView.setOnItemClickListener{parent,view,position,id->
@@ -238,8 +259,29 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
     private fun passwordFile(arr: List<String>) {//сохранение изменений
+        val KeyManager= KeyManager(keyAlias())
         val fileName = File(applicationContext.filesDir, "password.txt")
+        fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
+
         fileName.writeText(arr.joinToString(""))
+        fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
+    }
+
+    private fun hidePassword(arr: List<String>):List<String> {//скрытие пароля
+        val arr2 = ArrayList<String>()
+        if (arr.size==0){
+            return arr
+        }else{
+            for(i in 0..arr.size-1){
+                val arr3 = ArrayList<String>()
+                arr3.addAll(arr.get(i).dropLast(1).split("\n"))
+                arr3.removeAt(3)
+                arr3.add("********")
+                arr2.add(arr3.joinToString("\n"))
+            }
+
+            return arr2
+        }
     }
 
 
@@ -304,11 +346,20 @@ class MainActivity : AppCompatActivity() {//регистрация
         btnCheckPassword2.setOnClickListener {
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
-
             val password = etPwd2.text.toString()
-            editor.putString("password", password)
-            editor.apply()
-            setupPasswordSaving()
+            if(password==""){
+                Toast.makeText(this, "your password is too simple",Toast.LENGTH_SHORT).show()
+                newPassword()
+            }else{
+                editor.putString("password", password)
+                editor.apply()
+
+                val KeyManager= KeyManager(keyAlias())
+                val fileName = File(applicationContext.filesDir, "password.txt")
+                fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
+
+                setupPasswordSaving()
+            }
         }
     }
 

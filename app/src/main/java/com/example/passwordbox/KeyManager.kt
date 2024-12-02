@@ -1,4 +1,6 @@
 package com.example.passwordbox
+
+import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
@@ -13,8 +15,7 @@ class KeyManager(private val keyAlias: String) {
     val ANDROID_KEY_STORE = "AndroidKeyStore"
     val AES_MODE = "AES/GCM/NoPadding"
     private var iv: ByteArray = byteArrayOf(55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44)
-
-    val SECRET_ALIAS = "TEST"
+    val SECRET_ALIAS = keyAlias
 
     private fun generateSecretKey(keyAlias: String): SecretKey {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
