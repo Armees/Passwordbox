@@ -131,11 +131,26 @@ class MainActivity : AppCompatActivity() {//регистрация
             val website = findViewById<Button>(R.id.website)
             val editButton = findViewById<Button>(R.id.editButton)
             val shareButton = findViewById<Button>(R.id.shareButton)
+            val showButton = findViewById<Button>(R.id.showButton)
             val listView1 = findViewById<ListView>(R.id.listView1)
             val arr1 = ArrayList<String>()
+            val arr3 = ArrayList<String>()
+            var flag =true;
 
             arr1.addAll(arr.get(position).dropLast(1).split("\n"))
-            listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr1)//новый список(надо добавить отдельное редоктирование каждой строки)
+            arr3.addAll(arr2.get(position).dropLast(1).split("\n"))
+
+            listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr3)
+
+            showButton.setOnClickListener {
+                flag=!flag;
+
+                if(flag){
+                    listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr3)
+                }else{
+                    listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr1)
+                }
+            }
 
             website.setOnClickListener{
                 openInBrowser(arr1 [1])
@@ -190,7 +205,6 @@ class MainActivity : AppCompatActivity() {//регистрация
                 cancelButton2.setOnClickListener {
                     setupPasswordSaving()
                 }
-
             }
 
             deleteButton2.setOnClickListener {//подтверждение удаления пункта списка
@@ -220,10 +234,8 @@ class MainActivity : AppCompatActivity() {//регистрация
                 copyText(arr1.get(position))
                 true
             }
-
         }
     }
-
 
 
     private fun share(arr1: List<String>){//вункция деления с помошью qr кода
