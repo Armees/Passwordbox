@@ -1,22 +1,24 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:background="#2AE7E8"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Invalid password!"
-        android:textSize="24sp"
-        android:textColor="#FF0000" />
+        android:textColor="#FF0000"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/btnTryAgain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Try again" />
+        android:backgroundTint="#FFFFFF"
+        android:text="Try again"
+        android:textColor="#000000" />
 
 </LinearLayout>

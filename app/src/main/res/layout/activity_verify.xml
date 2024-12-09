@@ -1,24 +1,26 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2AE7E8"
     android:orientation="vertical"
     android:padding="16dp">
 
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="403dp"
-        android:layout_height="469dp"
+        android:layout_width="match_parent"
+        android:layout_height="638dp"
+        android:layout_weight="1"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="3dp"
-        android:layout_weight="1" />
+        tools:layout_editor_absoluteX="3dp" />
 
     <Button
         android:id="@+id/addNewButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add New" />
+        android:backgroundTint="#FFFFFF"
+        android:text="Add New"
+        android:textColor="#000000" />
 
 </LinearLayout>

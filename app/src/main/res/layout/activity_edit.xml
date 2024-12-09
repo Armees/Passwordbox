@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#2AE7E8">
 
     <ListView
         android:id="@+id/listView1"
@@ -18,7 +19,9 @@
         android:id="@+id/cancelButton2"
         android:layout_width="409dp"
         android:layout_height="53dp"
+        android:backgroundTint="#FFFFFF"
         android:text="Cancel"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/deleteButton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,19 +33,22 @@
         android:id="@+id/deleteButton2"
         android:layout_width="408dp"
         android:layout_height="53dp"
+        android:backgroundTint="#FFFFFF"
         android:text="Delete"
+        android:textColor="#402424"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.982" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button
         android:id="@+id/website"
         android:layout_width="408dp"
         android:layout_height="53dp"
+        android:backgroundTint="#FFFFFF"
         android:text="go to the website"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/editButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -52,7 +58,9 @@
         android:id="@+id/editButton"
         android:layout_width="408dp"
         android:layout_height="53dp"
+        android:backgroundTint="#FFFFFF"
         android:text="edit"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -61,7 +69,9 @@
         android:id="@+id/shareButton"
         android:layout_width="408dp"
         android:layout_height="53dp"
+        android:backgroundTint="#FFFFFF"
         android:text="share"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/website"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -70,7 +80,9 @@
         android:id="@+id/showButton"
         android:layout_width="408dp"
         android:layout_height="53dp"
+        android:backgroundTint="#FFFFFF"
         android:text="show"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/shareButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
