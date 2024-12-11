@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2AE7E8"
+    android:background="#000000"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -17,8 +17,8 @@
         android:id="@+id/btnTryAgain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#BABABA"
         android:text="Try again"
-        android:textColor="#000000" />
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
 
         val arr2=hidePassword(arr)
-        listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr2)
+        listView.adapter = ArrayAdapter(this, R.layout.navigation_item, arr2)
 
         fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
 
@@ -140,15 +140,15 @@ class MainActivity : AppCompatActivity() {//регистрация
             arr1.addAll(arr.get(position).dropLast(1).split("\n"))
             arr3.addAll(arr2.get(position).dropLast(1).split("\n"))
 
-            listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr3)
+            listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
 
             showButton.setOnClickListener {
                 flag=!flag;
 
                 if(flag){
-                    listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr3)
+                    listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
                 }else{
-                    listView1.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr1)
+                    listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr1)
                 }
             }
 

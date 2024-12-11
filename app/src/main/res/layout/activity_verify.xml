@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2AE7E8"
+    android:background="#000000"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="638dp"
         android:layout_weight="1"
+        android:divider="#BABABA"
+        android:dividerHeight="1dp"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="3dp" />
 
@@ -19,8 +21,8 @@
         android:id="@+id/addNewButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#BABABA"
         android:text="Add New"
-        android:textColor="#000000" />
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

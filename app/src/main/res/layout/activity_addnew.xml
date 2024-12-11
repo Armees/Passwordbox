@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2AE7E8">
+    android:background="#000000">
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:hint="name"
         android:imeOptions="actionNone"
         android:inputType="text|textAutoComplete"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -25,32 +27,38 @@
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:hint="url"
         android:imeOptions="actionNone"
         android:inputType="text|textAutoComplete"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/editText"
         tools:layout_editor_absoluteX="3dp" />
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="408dp"
-        android:layout_height="43dp"
+        android:layout_width="409dp"
+        android:layout_height="45dp"
+        android:backgroundTint="#FBFBFB"
         android:hint="login"
         android:imeOptions="actionNone"
         android:inputType="text|textAutoComplete"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/editText1"
-        tools:layout_editor_absoluteX="3dp" />
+        tools:layout_editor_absoluteX="2dp" />
 
     <EditText
         android:id="@+id/editText3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:hint="password"
         android:imeOptions="actionNone"
         android:inputType="text|textAutoComplete"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintTop_toBottomOf="@+id/editText2"
         app:layout_constraintVertical_bias="0.0"
@@ -60,19 +68,19 @@
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#BABABA"
         android:text="Save"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/cancelButton2"
-        android:layout_width="409dp"
-        android:layout_height="42dp"
-        android:backgroundTint="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#BABABA"
         android:text="cancel"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -81,9 +89,9 @@
         android:id="@+id/genButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
+        android:backgroundTint="#BABABA"
         android:text="generate password"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
         tools:layout_editor_absoluteX="0dp" />
 
