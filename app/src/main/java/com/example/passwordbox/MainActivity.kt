@@ -132,6 +132,7 @@ class MainActivity : AppCompatActivity() {//регистрация
             val editButton = findViewById<Button>(R.id.editButton)
             val shareButton = findViewById<Button>(R.id.shareButton)
             val showButton = findViewById<Button>(R.id.showButton)
+            val shareButton2 = findViewById<Button>(R.id.shareButton2)
             val listView1 = findViewById<ListView>(R.id.listView1)
             val arr1 = ArrayList<String>()
             val arr3 = ArrayList<String>()
@@ -150,6 +151,9 @@ class MainActivity : AppCompatActivity() {//регистрация
                 }else{
                     listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr1)
                 }
+            }
+            shareButton2.setOnClickListener{
+                shareMessage(this, arr1.joinToString(separator = "\n"))
             }
 
             website.setOnClickListener{
@@ -397,5 +401,20 @@ class MainActivity : AppCompatActivity() {//регистрация
         }
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(formattedUrl))
         startActivity(browserIntent)
+    }
+
+
+    fun shareMessage(context: Context, message: String) {
+        if (message.isNotEmpty()) {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, message)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, "Отправить сообщение через")
+            context.startActivity(shareIntent)
+        } else {
+            Toast.makeText(context, "Сообщение не может быть пустым", Toast.LENGTH_SHORT).show()
+        }
     }
 }

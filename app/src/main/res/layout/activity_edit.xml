@@ -20,8 +20,8 @@
 
     <Button
         android:id="@+id/cancelButton2"
-        android:layout_width="409dp"
-        android:layout_height="53dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#BABABA"
         android:text="Cancel"
         android:textColor="#FFFFFF"
@@ -34,8 +34,8 @@
 
     <Button
         android:id="@+id/deleteButton2"
-        android:layout_width="408dp"
-        android:layout_height="53dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#BABABA"
         android:text="Delete"
         android:textColor="#FFFFFF"
@@ -47,8 +47,8 @@
 
     <Button
         android:id="@+id/website"
-        android:layout_width="408dp"
-        android:layout_height="53dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#BABABA"
         android:text="go to the website"
         android:textColor="#FFFFFF"
@@ -59,8 +59,8 @@
 
     <Button
         android:id="@+id/editButton"
-        android:layout_width="408dp"
-        android:layout_height="53dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#BABABA"
         android:text="edit"
         android:textColor="#FFFFFF"
@@ -70,8 +70,8 @@
 
     <Button
         android:id="@+id/shareButton"
-        android:layout_width="408dp"
-        android:layout_height="53dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#BABABA"
         android:text="QR"
         android:textColor="#FFFFFF"
@@ -81,8 +81,8 @@
 
     <Button
         android:id="@+id/showButton"
-        android:layout_width="408dp"
-        android:layout_height="53dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#BABABA"
         android:text="show"
         android:textColor="#FFFFFF"
@@ -142,4 +142,15 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <Button
+        android:id="@+id/shareButton2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#BABABA"
+        android:text="share"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/showButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
