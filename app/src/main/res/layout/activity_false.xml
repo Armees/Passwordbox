@@ -17,7 +17,7 @@
         android:id="@+id/btnTryAgain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#BABABA"
+        android:backgroundTint="#63666A"
         android:text="Try again"
         android:textColor="#FFFFFF" />
 
