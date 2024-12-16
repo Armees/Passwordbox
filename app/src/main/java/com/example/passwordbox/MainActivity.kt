@@ -8,12 +8,12 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ListView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +21,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 //        val KeyManager= KeyManager(keyAlias())
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
         val listView = findViewById<ListView>(R.id.listView)
         val fileName = File(applicationContext.filesDir, "password.txt")
-        val arr = ArrayList<String>()
+        var arr = ArrayList<String>()
 
         val KeyManager= KeyManager(keyAlias())
         fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
@@ -118,10 +119,52 @@ class MainActivity : AppCompatActivity() {//регистрация
         val savedtext = fileName.readText()
         arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
 
-        val arr2=hidePassword(arr)
+        var arr2=hidePassword(arr)
         listView.adapter = ArrayAdapter(this, R.layout.navigation_item, arr2)
 
         fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
+
+        val spinner: Spinner = findViewById(R.id.spinner)
+        val items = listOf("date","date(reverse)","name","name(reverse)")
+        val adapterSpiner = ArrayAdapter(this, R.layout.spinner_item, items)
+        spinner.adapter = adapterSpiner
+
+        spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
+                if(position==0){
+                    arr.clear()
+                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
+                    arr2=hidePassword(arr)
+                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                }
+                if(position==1){
+                    arr.clear()
+                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
+                    arr2=hidePassword(arr)
+                    arr2= arr2.reversed() as ArrayList<String>
+                    arr= arr.reversed() as ArrayList<String>
+                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                }
+                if(position==2){
+                    arr.clear()
+                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
+                    arr2=hidePassword(arr)
+                    arr2= arr2.sorted().reversed().reversed() as ArrayList<String>
+                    arr= arr.sorted().reversed().reversed() as ArrayList<String>
+                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                }
+                if(position==3){
+                    arr.clear()
+                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
+                    arr2=hidePassword(arr)
+                    arr2= arr2.sorted().reversed() as ArrayList<String>
+                    arr= arr.sorted().reversed().reversed() as ArrayList<String>
+                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
+            }
+        })
 
         //нажатие на элемент списка
         listView.setOnItemClickListener{parent,view,position,id->
@@ -271,7 +314,6 @@ class MainActivity : AppCompatActivity() {//регистрация
             e.printStackTrace()
         }
     }
-
 
 
     private fun passwordFile(arr: List<String>) {//сохранение изменений

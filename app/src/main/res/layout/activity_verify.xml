@@ -6,6 +6,13 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#63666A"
+        android:spinnerMode="dropdown" />/>
+
 
     <ListView
         android:id="@+id/listView"
@@ -15,7 +22,10 @@
         android:divider="#BABABA"
         android:dividerHeight="1dp"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="3dp" />
+        tools:layout_editor_absoluteX="3dp" >
+
+
+    </ListView>
 
     <Button
         android:id="@+id/addNewButton"
