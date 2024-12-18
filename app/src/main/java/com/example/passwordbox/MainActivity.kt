@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         } else {//если пароль уже создан
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val password = sharedPreferences.getString("password", "")
-            chekPassword(password!!)
+            chekPassword(password!!,0)
         }
     }
 
@@ -375,7 +375,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
-    private fun chekPassword(password1: String) {//проерка пароля
+    private fun chekPassword(password1: String, i: Int) {//проверка пароля
         setContentView(R.layout.activity_main)
         val etPwd = findViewById<EditText>(R.id.editTextNumberPassword)
         val btnCheckPassword = findViewById<Button>(R.id.button)
@@ -387,7 +387,14 @@ class MainActivity : AppCompatActivity() {//регистрация
                 setContentView(R.layout.activity_false)
                 val btnTryAgain = findViewById<Button>(R.id.btnTryAgain)
                 btnTryAgain.setOnClickListener {
-                    chekPassword(password1)
+                    if(i<5){
+                        chekPassword(password1,i+1)
+                    }else{
+                        val fileName = File(applicationContext.filesDir, "password.txt")
+                        Toast.makeText(this, "too many password attempts", Toast.LENGTH_SHORT).show()
+                        fileName.delete()
+                        recreate()
+                    }
                 }
             }
         }
