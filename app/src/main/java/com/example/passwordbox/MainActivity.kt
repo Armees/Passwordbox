@@ -135,31 +135,41 @@ class MainActivity : AppCompatActivity() {//регистрация
                     arr.clear()
                     arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
                     arr2=hidePassword(arr)
-                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    if(arr2.size>1){
+                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    }
                 }
                 if(position==1){
                     arr.clear()
                     arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
                     arr2=hidePassword(arr)
-                    arr2= arr2.reversed() as ArrayList<String>
-                    arr= arr.reversed() as ArrayList<String>
-                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    if(arr2.size>1){
+                        arr2= arr2.reversed() as ArrayList<String>
+                        arr= arr.reversed() as ArrayList<String>
+                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    }
+
                 }
                 if(position==2){
                     arr.clear()
                     arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
                     arr2=hidePassword(arr)
-                    arr2= arr2.sorted().reversed().reversed() as ArrayList<String>
-                    arr= arr.sorted().reversed().reversed() as ArrayList<String>
-                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    if(arr2.size>1){
+                        arr2= arr2.sorted().reversed().reversed() as ArrayList<String>
+                        arr= arr.sorted().reversed().reversed() as ArrayList<String>
+                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    }
                 }
                 if(position==3){
                     arr.clear()
                     arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
                     arr2=hidePassword(arr)
-                    arr2= arr2.sorted().reversed() as ArrayList<String>
-                    arr= arr.sorted().reversed().reversed() as ArrayList<String>
-                    listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    if(arr2.size>1){
+                        arr2= arr2.sorted().reversed() as ArrayList<String>
+                        arr= arr.sorted().reversed().reversed() as ArrayList<String>
+                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
+                    }
+
                 }
             }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
@@ -387,18 +397,23 @@ class MainActivity : AppCompatActivity() {//регистрация
                 setContentView(R.layout.activity_false)
                 val btnTryAgain = findViewById<Button>(R.id.btnTryAgain)
                 btnTryAgain.setOnClickListener {
-                    if(i<5){
+                    if (i<4){
                         chekPassword(password1,i+1)
                     }else{
-                        val fileName = File(applicationContext.filesDir, "password.txt")
-                        Toast.makeText(this, "too many password attempts", Toast.LENGTH_SHORT).show()
-                        fileName.delete()
-                        recreate()
+                        Toast.makeText(this, "to many password attempts",Toast.LENGTH_SHORT).show()
+                        deleteAppData()
                     }
                 }
             }
         }
     }
+
+    private fun deleteAppData() {
+        val packageName = applicationContext.packageName
+        val runtime = Runtime.getRuntime()
+        runtime.exec("pm clear $packageName")
+    }
+
 
 
 
