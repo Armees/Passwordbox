@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -39,7 +38,12 @@ class MainActivity : AppCompatActivity() {//регистрация
         } else {//если пароль уже создан
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val password = sharedPreferences.getString("password", "")
-            chekPassword(password!!,0)
+            if (password == "") {
+                deleteAppData()
+            }else{
+                chekPassword(password!!,0)
+            }
+
         }
     }
 
@@ -407,6 +411,8 @@ class MainActivity : AppCompatActivity() {//регистрация
             }
         }
     }
+
+
 
     private fun deleteAppData() {
         val packageName = applicationContext.packageName
