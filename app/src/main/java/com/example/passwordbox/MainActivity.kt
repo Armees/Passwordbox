@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {//регистрация
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val password = sharedPreferences.getString("password", "")
             if (password == "") {
-                deleteAppData()
+                newPassword()
             }else{
                 chekPassword(password!!,0)
             }
