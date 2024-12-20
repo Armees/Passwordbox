@@ -127,13 +127,71 @@ class MainActivity : AppCompatActivity() {//регистрация
             setupPasswordSaving()
         }
         uncButton.setOnClickListener {
-            Toast.makeText(this, "the feature will appear later",Toast.LENGTH_SHORT).show()
+            setContentView(R.layout.activity_unc)
+            val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
+            val saveButtonUnc = findViewById<Button>(R.id.saveButtonunc)
+            val cancelButtonUnc = findViewById<Button>(R.id.cancelButtonunc)
+
+            saveButtonUnc.setOnClickListener {
+                val name = editTextUnc.text.toString()
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("name", name)
+                editor.apply()
+                setupPasswordSaving()
+            }
+            cancelButtonUnc.setOnClickListener {
+                settings()
+            }
+
         }
         pcButton.setOnClickListener {
-            Toast.makeText(this, "the feature will appear later",Toast.LENGTH_SHORT).show()
+            setContentView(R.layout.activity_unc)
+            val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
+            val saveButtonUnc = findViewById<Button>(R.id.saveButtonunc)
+            val cancelButtonUnc = findViewById<Button>(R.id.cancelButtonunc)
+            val textView7=findViewById<TextView>(R.id.textView7)
+
+            editTextUnc.setHint("new password")
+            textView7.text="write a new password"
+
+            saveButtonUnc.setOnClickListener {
+                val fileName = File(applicationContext.filesDir, "password.txt")
+                val KeyManager= KeyManager(keyAlias())
+                fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
+                val password = editTextUnc.text.toString()
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("password", password)
+                editor.apply()
+                val KeyManager2= KeyManager(keyAlias())
+                fileName.writeText(KeyManager2.encrypt(fileName.readText()))//шифровка
+                setupPasswordSaving()
+            }
+            cancelButtonUnc.setOnClickListener {
+                settings()
+            }
         }
         wipeDataButton.setOnClickListener {
-            deleteAppData()
+            setContentView(R.layout.activity_main)
+            val etPwd = findViewById<EditText>(R.id.editTextNumberPassword)
+            val btnCheckPassword = findViewById<Button>(R.id.button)
+            val hello = findViewById<TextView>(R.id.helloWorldText)
+            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val name = sharedPreferences.getString("name", "my Lord")
+            val password1 = sharedPreferences.getString("password", "my Lord")
+            hello.setTextColor(Color.parseColor("#FA0000"));
+            btnCheckPassword.setTextColor(Color.parseColor("#FA0000"));
+            btnCheckPassword.text="Wipe data"
+            hello.text = "$name, you sure?"
+            btnCheckPassword.setOnClickListener {
+                val text1 = etPwd.text.toString()
+                if (text1 == password1) {
+                    deleteAppData()
+                }else {
+                    settings()
+                }
+            }
         }
 
     }
