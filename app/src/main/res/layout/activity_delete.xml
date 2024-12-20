@@ -20,17 +20,17 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="410dp"
-        android:layout_height="122dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.118"
+        app:layout_constraintVertical_bias="0.277"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -49,12 +49,14 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="409dp"
-        android:layout_height="65dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp"
         android:textAlignment="center"
         android:textColor="#FA0000"
         android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

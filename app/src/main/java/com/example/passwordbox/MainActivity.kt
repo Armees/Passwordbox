@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity() {//регистрация
                 }
             }
             shareButton2.setOnClickListener{
-                shareMessage(this, arr1.joinToString(separator = "\n"))
+                shareMessage(this, arrToTextShare(arr1))
             }
 
             website.setOnClickListener{
@@ -393,6 +393,10 @@ class MainActivity : AppCompatActivity() {//регистрация
         setContentView(R.layout.activity_main)
         val etPwd = findViewById<EditText>(R.id.editTextNumberPassword)
         val btnCheckPassword = findViewById<Button>(R.id.button)
+        val hello = findViewById<TextView>(R.id.helloWorldText)
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val name = sharedPreferences.getString("name", "my Lord")
+        hello.text = "Hello, $name"
         btnCheckPassword.setOnClickListener {
             val text1 = etPwd.text.toString()
             if (text1 == password1) {
@@ -413,6 +417,20 @@ class MainActivity : AppCompatActivity() {//регистрация
     }
 
 
+    private fun arrToTextShare(arr: List<String>):String{
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val name = sharedPreferences.getString("name", "my Lord")
+        val text="Информация из приложения Password box:\n" +
+                "От пользователя: $name\n" +
+                "Название: ${arr[0]}\n" +
+                "Логин: ${arr[1]}\n" +
+                "Пароль: ${arr[2]}\n" +
+                "Ссылка: ${arr[3]}"
+
+        return text
+    }
+
+
 
     private fun deleteAppData() {
         val packageName = applicationContext.packageName
@@ -428,15 +446,18 @@ class MainActivity : AppCompatActivity() {//регистрация
         setContentView(R.layout.activity_new)
         val etPwd2 = findViewById<EditText>(R.id.editTextNumberPassword2)
         val btnCheckPassword2 = findViewById<Button>(R.id.button2)
+        val userName=findViewById<EditText>(R.id.editTextTextuName)
 
         btnCheckPassword2.setOnClickListener {
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             val password = etPwd2.text.toString()
+            val name=userName.text.toString()
             if(password==""){
                 Toast.makeText(this, "your password is too simple",Toast.LENGTH_SHORT).show()
                 newPassword()
             }else{
+                editor.putString("name", name)
                 editor.putString("password", password)
                 editor.apply()
 
