@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.Spinner
@@ -61,8 +62,14 @@ class MainActivity : AppCompatActivity() {//регистрация
         setContentView(R.layout.activity_verify)
         val fileName = File(applicationContext.filesDir, "password.txt")
         val addNewButton = findViewById<Button>(R.id.addNewButton)
+        val settingsButton = findViewById<ImageButton>(R.id.settingsButton)
+
 
         listSaving()
+        settingsButton.setOnClickListener {
+            settings()
+        }
+
         addNewButton.setOnClickListener {
             setContentView(R.layout.activity_addnew)
 
@@ -106,6 +113,29 @@ class MainActivity : AppCompatActivity() {//регистрация
             }
 
         }
+    }
+
+
+    private fun settings() {//настройки
+        setContentView(R.layout.activity_settings)
+        val cancelButton = findViewById<ImageButton>(R.id.cancelImageButton)
+        val uncButton=findViewById<Button>(R.id.uncButton)
+        val pcButton=findViewById<Button>(R.id.pcButton)
+        val wipeDataButton=findViewById<Button>(R.id.wipeDataButton)
+
+        cancelButton.setOnClickListener {
+            setupPasswordSaving()
+        }
+        uncButton.setOnClickListener {
+            Toast.makeText(this, "the feature will appear later",Toast.LENGTH_SHORT).show()
+        }
+        pcButton.setOnClickListener {
+            Toast.makeText(this, "the feature will appear later",Toast.LENGTH_SHORT).show()
+        }
+        wipeDataButton.setOnClickListener {
+            deleteAppData()
+        }
+
     }
 
 
