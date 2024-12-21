@@ -173,10 +173,11 @@ class MainActivity : AppCompatActivity() {//регистрация
             }
         }
         wipeDataButton.setOnClickListener {
-            setContentView(R.layout.activity_main)
-            val etPwd = findViewById<EditText>(R.id.editTextNumberPassword)
-            val btnCheckPassword = findViewById<Button>(R.id.button)
-            val hello = findViewById<TextView>(R.id.helloWorldText)
+            setContentView(R.layout.activity_wipedata)
+            val cancelButtonWipe = findViewById<ImageButton>(R.id.cancelButtonWipe)
+            val etPwd = findViewById<EditText>(R.id.editTextNumberPasswordWipe)
+            val btnCheckPassword = findViewById<Button>(R.id.buttonWipe)
+            val hello = findViewById<TextView>(R.id.helloWorldText1)
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val name = sharedPreferences.getString("name", "my Lord")
             val password1 = sharedPreferences.getString("password", "my Lord")
@@ -191,6 +192,9 @@ class MainActivity : AppCompatActivity() {//регистрация
                 }else {
                     settings()
                 }
+            }
+            cancelButtonWipe.setOnClickListener {
+                settings()
             }
         }
 

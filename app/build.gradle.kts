@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.passwordbox"
         minSdk = 24
         targetSdk = 34
-        versionCode = 7
-        versionName = "1.6beta"
+        versionCode = 9
+        versionName = "1.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.zxing:core:3.4.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
