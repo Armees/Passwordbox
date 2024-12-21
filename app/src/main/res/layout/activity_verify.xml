@@ -1,41 +1,62 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:padding="16dp">
+    android:padding="16dp"    >
+
 
     <ImageButton
         android:id="@+id/settingsButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/settings" />
+        android:src="@drawable/settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#63666A"
         android:layout_below="@id/settingsButton"
-        android:layout_marginTop="4dp"
-        android:spinnerMode="dropdown" />
+        android:layout_marginTop="8dp"
+        android:background="#63666A"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsButton" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="592dp"
+        android:layout_width="356dp"
+        android:layout_height="584dp"
         android:layout_below="@id/spinner"
+
         android:divider="#BABABA"
         android:dividerHeight="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/addNewButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
-    <Button
+    <ImageButton
         android:id="@+id/addNewButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="Add New"
-        android:textColor="#FFFFFF"
-        android:layout_alignParentBottom="true" />
-</RelativeLayout>
+
+        android:backgroundTint="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.463"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/addnew" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

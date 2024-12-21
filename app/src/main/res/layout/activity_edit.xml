@@ -6,97 +6,104 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="267dp"
-        android:layout_height="261dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="-6dp"
-        android:divider="#BABABA"
-        android:dividerHeight="1dp"/>
-
-    <Button
+    <ImageButton
         android:id="@+id/cancelButton2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="Cancel"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/deleteButton2"
+        android:backgroundTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView1"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-    <Button
+    <ImageButton
         android:id="@+id/deleteButton2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="Delete"
-        android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.463"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/delete" />
 
 
-    <Button
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="244dp"
+        android:layout_height="261dp"
+        android:layout_marginTop="58dp"
+        android:divider="#BABABA"
+        android:dividerHeight="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <ImageButton
         android:id="@+id/website"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="go to the website"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/editButton"
+        android:layout_marginTop="108dp"
+        android:backgroundTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/openbrowser" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/editButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="edit"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/shareButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="QR"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/website"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/showButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="show"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/shareButton"
+        android:layout_marginTop="48dp"
+        android:backgroundTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/cancelButton2"
+        app:srcCompat="@drawable/edit" />
+
+    <ImageButton
+        android:id="@+id/shareButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        app:layout_constraintStart_toEndOf="@+id/shareButton2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/qr" />
+
+    <ImageButton
+        android:id="@+id/shareButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/share1" />
+
+
+    <ImageButton
+        android:id="@+id/showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="220dp"
+        android:backgroundTint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/show" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="68dp"
         android:text="Name:"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
@@ -121,7 +128,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="Login:"
         android:textColor="#FFFFFF"
@@ -143,14 +150,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <Button
-        android:id="@+id/shareButton2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="share"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/showButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

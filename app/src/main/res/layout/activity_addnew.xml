@@ -16,12 +16,12 @@
         android:inputType="text|textAutoComplete"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.364" />
+        app:layout_constraintVertical_bias="0.311" />
 
     <EditText
         android:id="@+id/editText1"
@@ -59,41 +59,36 @@
         android:inputType="text|textAutoComplete"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintTop_toBottomOf="@+id/editText2"
-        app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/saveButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="Save"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/save" />
 
-    <Button
+    <ImageButton
         android:id="@+id/cancelButton2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="cancel"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        android:backgroundTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-    <Button
+    <ImageButton
         android:id="@+id/genButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="generate password"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/cancelButton2"
-        tools:layout_editor_absoluteX="0dp" />
+        android:backgroundTint="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/saveButton"
+        app:srcCompat="@drawable/genpass" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

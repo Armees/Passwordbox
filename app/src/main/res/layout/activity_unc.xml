@@ -35,25 +35,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/saveButtonunc"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="Save"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <Button
-        android:id="@+id/cancelButtonunc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#63666A"
-        android:text="cancel"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/saveButtonunc"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/save" />
 
+    <ImageButton
+        android:id="@+id/cancelButtonunc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

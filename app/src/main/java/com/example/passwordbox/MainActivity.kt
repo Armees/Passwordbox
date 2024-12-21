@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {//регистрация
     private fun setupPasswordSaving() {//сохранение новых паролей
         setContentView(R.layout.activity_verify)
         val fileName = File(applicationContext.filesDir, "password.txt")
-        val addNewButton = findViewById<Button>(R.id.addNewButton)
+        val addNewButton = findViewById<ImageButton>(R.id.addNewButton)
         val settingsButton = findViewById<ImageButton>(R.id.settingsButton)
 
 
@@ -77,9 +77,9 @@ class MainActivity : AppCompatActivity() {//регистрация
             val editText1 = findViewById<EditText>(R.id.editText1)
             val editText2 = findViewById<EditText>(R.id.editText2)
             val editText3 = findViewById<EditText>(R.id.editText3)
-            val saveButton = findViewById<Button>(R.id.saveButton)
-            val cancelButton2 = findViewById<Button>(R.id.cancelButton2)
-            val genButton = findViewById<Button>(R.id.genButton)
+            val saveButton = findViewById<ImageButton>(R.id.saveButton)
+            val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
+            val genButton = findViewById<ImageButton>(R.id.genButton)
 
             genButton.setOnClickListener {
                 editText3.setText(generatePassword())
@@ -129,8 +129,8 @@ class MainActivity : AppCompatActivity() {//регистрация
         uncButton.setOnClickListener {
             setContentView(R.layout.activity_unc)
             val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
-            val saveButtonUnc = findViewById<Button>(R.id.saveButtonunc)
-            val cancelButtonUnc = findViewById<Button>(R.id.cancelButtonunc)
+            val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
+            val cancelButtonUnc = findViewById<ImageButton>(R.id.cancelButtonunc)
 
             saveButtonUnc.setOnClickListener {
                 val name = editTextUnc.text.toString()
@@ -148,8 +148,8 @@ class MainActivity : AppCompatActivity() {//регистрация
         pcButton.setOnClickListener {
             setContentView(R.layout.activity_unc)
             val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
-            val saveButtonUnc = findViewById<Button>(R.id.saveButtonunc)
-            val cancelButtonUnc = findViewById<Button>(R.id.cancelButtonunc)
+            val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
+            val cancelButtonUnc = findViewById<ImageButton>(R.id.cancelButtonunc)
             val textView7=findViewById<TextView>(R.id.textView7)
 
             editTextUnc.setHint("new password")
@@ -271,13 +271,13 @@ class MainActivity : AppCompatActivity() {//регистрация
         //нажатие на элемент списка
         listView.setOnItemClickListener{parent,view,position,id->
             setContentView(R.layout.activity_edit)
-            val cancelButton2 = findViewById<Button>(R.id.cancelButton2)
-            val deleteButton2 = findViewById<Button>(R.id.deleteButton2)
-            val website = findViewById<Button>(R.id.website)
-            val editButton = findViewById<Button>(R.id.editButton)
-            val shareButton = findViewById<Button>(R.id.shareButton)
-            val showButton = findViewById<Button>(R.id.showButton)
-            val shareButton2 = findViewById<Button>(R.id.shareButton2)
+            val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
+            val deleteButton2 = findViewById<ImageButton>(R.id.deleteButton2)
+            val website = findViewById<ImageButton>(R.id.website)
+            val editButton = findViewById<ImageButton>(R.id.editButton)
+            val shareButton = findViewById<ImageButton>(R.id.shareButton)
+            val showButton = findViewById<ImageButton>(R.id.showButton)
+            val shareButton2 = findViewById<ImageButton>(R.id.shareButton2)
             val listView1 = findViewById<ListView>(R.id.listView1)
             val arr1 = ArrayList<String>()
             val arr3 = ArrayList<String>()
@@ -293,8 +293,10 @@ class MainActivity : AppCompatActivity() {//регистрация
 
                 if(flag){
                     listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
+                    showButton.setImageResource(R.drawable.show)
                 }else{
                     listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr1)
+                    showButton.setImageResource(R.drawable.notshow)
                 }
             }
             shareButton2.setOnClickListener{
@@ -315,9 +317,9 @@ class MainActivity : AppCompatActivity() {//регистрация
                 val editText1 = findViewById<EditText>(R.id.editText1)
                 val editText2 = findViewById<EditText>(R.id.editText2)
                 val editText3 = findViewById<EditText>(R.id.editText3)
-                val saveButton = findViewById<Button>(R.id.saveButton)
-                val cancelButton2 = findViewById<Button>(R.id.cancelButton2)
-                val genButton = findViewById<Button>(R.id.genButton)
+                val saveButton = findViewById<ImageButton>(R.id.saveButton)
+                val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
+                val genButton = findViewById<ImageButton>(R.id.genButton)
 
                 genButton.setOnClickListener {
                     editText3.setText(generatePassword())
@@ -359,8 +361,8 @@ class MainActivity : AppCompatActivity() {//регистрация
             deleteButton2.setOnClickListener {//подтверждение удаления пункта списка
                 setContentView(R.layout.activity_delete)
 
-                val deleteButton = findViewById<Button>(R.id.deleteButton)
-                val cancelButton = findViewById<Button>(R.id.cancelButton)
+                val deleteButton = findViewById<ImageButton>(R.id.deleteButton)
+                val cancelButton = findViewById<ImageButton>(R.id.cancelButton)
                 val textView1=findViewById<TextView>(R.id.textView1)
                 val textView2=findViewById<TextView>(R.id.textView2)
 
@@ -390,7 +392,7 @@ class MainActivity : AppCompatActivity() {//регистрация
     private fun share(arr1: List<String>){//вункция деления с помошью qr кода
         setContentView(R.layout.activity_qrcode)
         val qrIV = findViewById<ImageView>(R.id.IVQrcode)
-        val cancelButton3 = findViewById<Button>(R.id.cancelButton3)
+        val cancelButton3 = findViewById<ImageButton>(R.id.cancelButton3)
         val msgEdt=arr1.joinToString(separator = "\n")//преврашение масива в строку
         cancelButton3.setOnClickListener {//кнопка для закрытия qr rкода
             setupPasswordSaving()

@@ -12,19 +12,19 @@
         android:layout_height="300dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="QR Code"
-        app:layout_constraintBottom_toTopOf="@+id/cancelButton3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/cancelButton3"
-        android:layout_width="408dp"
-        android:layout_height="53dp"
-        android:backgroundTint="#63666A"
-        android:text="cancel"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
