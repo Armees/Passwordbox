@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="157dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/pcButton"
+        android:layout_marginTop="80dp"
+        android:background="@color/additional"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pcButton" />
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -67,5 +80,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/cancel" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Theme:"
+        android:textColor="@color/text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/spinner2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

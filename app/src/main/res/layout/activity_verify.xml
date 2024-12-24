@@ -5,7 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="16dp"    >
+    android:padding="16dp">
 
 
     <ImageButton
@@ -19,21 +19,21 @@ xmlns:tools="http://schemas.android.com/tools"
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="284dp"
+        android:layout_height="36dp"
         android:layout_below="@id/settingsButton"
-        android:layout_marginTop="8dp"
         android:background="@color/additional"
         android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/settingsButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="356dp"
-        android:layout_height="584dp"
+        android:layout_width="343dp"
+        android:layout_height="0dp"
         android:layout_below="@id/spinner"
+        android:layout_marginTop="18dp"
         android:divider="#BABABA"
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toTopOf="@+id/addNewButton"
@@ -55,7 +55,6 @@ xmlns:tools="http://schemas.android.com/tools"
         app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/addnew" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

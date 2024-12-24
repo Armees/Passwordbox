@@ -12,7 +12,7 @@
         android:layout_marginTop="280dp"
         android:text="write a new username"
         android:textColor="@color/text"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"

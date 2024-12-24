@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -18,6 +19,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
@@ -32,6 +34,15 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity() {//регистрация
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPreferences = getSharedPreferences("AppThemePrefs", MODE_PRIVATE)
+        val savedTheme = sharedPreferences.getString("theme", "System")
+
+        when (savedTheme) {
+            "Light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "Dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+
         val fileName = File(applicationContext.filesDir, "password.txt")
         if (!fileName.exists()) {
             fileName.createNewFile()
@@ -116,12 +127,55 @@ class MainActivity : AppCompatActivity() {//регистрация
     }
 
 
+    private fun saveTheme(theme: String, sharedPreferences: SharedPreferences) {
+        val editor = sharedPreferences.edit()
+        editor.putString("theme", theme)
+        editor.apply()
+    }
+
+
     private fun settings() {//настройки
         setContentView(R.layout.activity_settings)
         val cancelButton = findViewById<ImageButton>(R.id.cancelImageButton)
         val uncButton=findViewById<Button>(R.id.uncButton)
         val pcButton=findViewById<Button>(R.id.pcButton)
         val wipeDataButton=findViewById<Button>(R.id.wipeDataButton)
+
+        val sharedPreferences = getSharedPreferences("AppThemePrefs", MODE_PRIVATE)
+        val savedTheme = sharedPreferences.getString("theme", "System")
+        var items2 = listOf("System","Light","Dark")
+        if (savedTheme == "System") {
+            items2=listOf("System","Light","Dark")
+        }
+        if(savedTheme == "Light"){
+            items2=listOf("Light","System","Dark")
+        }
+        if(savedTheme == "Dark"){
+            items2=listOf("Dark","System","Light")
+        }
+        val spinner: Spinner = findViewById(R.id.spinner2)
+
+        val adapterSpiner = ArrayAdapter(this, R.layout.spinner_item, items2)
+        spinner.adapter = adapterSpiner
+
+        spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
+                if(items2[position]=="System"){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    saveTheme("System", sharedPreferences)
+                }
+                if(items2[position]=="Light"){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    saveTheme("Light", sharedPreferences)
+                }
+                if(items2[position]=="Dark"){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    saveTheme("Dark", sharedPreferences)
+                }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
+            }
+        })
 
         cancelButton.setOnClickListener {
             setupPasswordSaving()
@@ -146,29 +200,47 @@ class MainActivity : AppCompatActivity() {//регистрация
 
         }
         pcButton.setOnClickListener {
-            setContentView(R.layout.activity_unc)
-            val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
-            val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
-            val cancelButtonUnc = findViewById<ImageButton>(R.id.cancelButtonunc)
-            val textView7=findViewById<TextView>(R.id.textView7)
-
-            editTextUnc.setHint("new password")
-            textView7.text="write a new password"
-
-            saveButtonUnc.setOnClickListener {
-                val fileName = File(applicationContext.filesDir, "password.txt")
-                val KeyManager= KeyManager(keyAlias())
-                fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
-                val password = editTextUnc.text.toString()
-                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("password", password)
-                editor.apply()
-                val KeyManager2= KeyManager(keyAlias())
-                fileName.writeText(KeyManager2.encrypt(fileName.readText()))//шифровка
-                setupPasswordSaving()
+            setContentView(R.layout.activity_wipedata)
+            val cancelButtonWipe = findViewById<ImageButton>(R.id.cancelButtonWipe)
+            val etPwd = findViewById<EditText>(R.id.editTextNumberPasswordWipe)
+            val btnCheckPassword = findViewById<Button>(R.id.buttonWipe)
+            val hello = findViewById<TextView>(R.id.helloWorldText1)
+            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val name = sharedPreferences.getString("name", "my Lord")
+            val password1 = sharedPreferences.getString("password", "my Lord")
+            btnCheckPassword.text="login"
+            hello.text = "$name, enter password"
+            btnCheckPassword.setOnClickListener {
+                val text1 = etPwd.text.toString()
+                if (text1 == password1) {
+                    setContentView(R.layout.activity_unc)
+                    val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
+                    val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
+                    val cancelButtonUnc = findViewById<ImageButton>(R.id.cancelButtonunc)
+                    val textView7=findViewById<TextView>(R.id.textView7)
+                    saveButtonUnc.setOnClickListener {
+                        val fileName = File(applicationContext.filesDir, "password.txt")
+                        val KeyManager= KeyManager(keyAlias())
+                        fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
+                        val password = editTextUnc.text.toString()
+                        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("password", password)
+                        editor.apply()
+                        val KeyManager2= KeyManager(keyAlias())
+                        fileName.writeText(KeyManager2.encrypt(fileName.readText()))//шифровка
+                        setupPasswordSaving()
+                    }
+                    cancelButtonUnc.setOnClickListener {
+                        settings()
+                    }
+                    editTextUnc.setHint("new password")
+                    textView7.text="write a new password"
+                }else {
+                    settings()
+                }
             }
-            cancelButtonUnc.setOnClickListener {
+            cancelButtonWipe.setOnClickListener {
                 settings()
             }
         }
@@ -197,7 +269,6 @@ class MainActivity : AppCompatActivity() {//регистрация
                 settings()
             }
         }
-
     }
 
 
