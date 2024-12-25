@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Password box</string>
+    <string name="your_autofill_service_name">Password box autofill service</string>
+    <string name="autofill_service_description">Password box autofill service</string>
 </resources>

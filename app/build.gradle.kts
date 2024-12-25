@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.passwordbox"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 10
         versionName = "1.8"
@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.autofill:autofill:1.0.0")
     implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.zxing:core:3.4.1")
     implementation(libs.androidx.core.ktx)
