@@ -1,39 +1,47 @@
 package com.example.passwordbox
 
-import com.example.passwordbox.R
 import android.app.assist.AssistStructure
 import android.content.Context
 import android.os.CancellationSignal
 import android.service.autofill.*
+import android.text.InputType
 import android.util.Log
+import android.view.View
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
 import android.widget.RemoteViews
 
 class MyAutofillService : AutofillService() {
 
+    private val cache = mutableMapOf<AutofillId, AutofillField>()
+
     override fun onFillRequest(
         request: FillRequest,
         cancellationSignal: CancellationSignal,
         callback: FillCallback
     ) {
-        val structure = request.fillContexts.lastOrNull()?.structure
-        if (structure == null) {
-            callback.onFailure("No structure found")
-            return
-        }
+        try {
+            val structure = request.fillContexts.lastOrNull()?.structure
+            if (structure == null) {
+                callback.onFailure("No structure found")
+                return
+            }
 
-        val autofillFields = parseStructure(structure)
-        if (autofillFields.isEmpty()) {
-            callback.onFailure("No autofill fields found")
-            return
-        }
+            val autofillFields = parseStructure(structure)
+            if (autofillFields.isEmpty()) {
+                callback.onFailure("No autofill fields found")
+                return
+            }
 
-        val fillResponse = createFillResponse(applicationContext, autofillFields)
-        if (fillResponse != null) {
-            callback.onSuccess(fillResponse)
-        } else {
-            callback.onFailure("Failed to create FillResponse")
+            val fillResponse = createFillResponse(applicationContext, autofillFields)
+            if (fillResponse != null) {
+                callback.onSuccess(fillResponse)
+            } else {
+                callback.onFailure("Failed to create FillResponse")
+            }
+        } catch (e: Exception) {
+            Log.e("MyAutofillService", "Error processing fill request", e)
+            callback.onFailure("Error processing fill request")
         }
     }
 
@@ -43,35 +51,40 @@ class MyAutofillService : AutofillService() {
 
         for (i in 0 until nodes) {
             val node = structure.getWindowNodeAt(i).rootViewNode
-            Log.d("MyAutofillService", "node: $node")
             parseNode(node, autofillFields)
         }
-        Log.d("MyAutofillService", "autofillFields1: $autofillFields")
         return autofillFields
     }
 
     private fun parseNode(node: AssistStructure.ViewNode, autofillFields: MutableList<AutofillField>) {
         val hint = node.autofillHints
-        val autofillId = node.autofillId // Получаем AutofillId из ViewNode
-        Log.d("MyAutofillService", "autofillId: $autofillId")
-        Log.d("MyAutofillService", "hint: $hint")
+        val autofillId = node.autofillId
+        val autofillType = node.autofillType
+        val inputType = node.inputType
+
         if (!hint.isNullOrEmpty() && autofillId != null) {
             val autofillField = AutofillField(autofillId, hint, node.text?.toString())
-            Log.d("MyAutofillService", "autofillField: $autofillField")
             autofillFields.add(autofillField)
+            cache[autofillId] = autofillField
+        } else if (autofillType != View.AUTOFILL_TYPE_NONE && autofillId != null) {
+            val autofillField = AutofillField(autofillId, arrayOf(""), node.text?.toString())
+            autofillFields.add(autofillField)
+            cache[autofillId] = autofillField
+        } else if (inputType != InputType.TYPE_NULL && autofillId != null) {
+            val autofillField = AutofillField(autofillId, arrayOf(""), node.text?.toString())
+            autofillFields.add(autofillField)
+            cache[autofillId] = autofillField
         }
 
         for (i in 0 until node.childCount) {
-            Log.d("MyAutofillService", "autofillField: $autofillFields")
             parseNode(node.getChildAt(i), autofillFields)
         }
     }
 
-
     private fun createFillResponse(
         context: Context,
         autofillFields: List<AutofillField>
-    ): FillResponse {
+    ): FillResponse? {
         val datasetBuilder1 = Dataset.Builder()
         val datasetBuilder2 = Dataset.Builder()
 
@@ -91,13 +104,11 @@ class MyAutofillService : AutofillService() {
             datasetBuilder2.setValue(autofillId, AutofillValue.forText(value2), presentation2)
         }
 
-        // Создаём FillResponse с двумя Dataset
         return FillResponse.Builder()
             .addDataset(datasetBuilder1.build())
             .addDataset(datasetBuilder2.build())
             .build()
     }
-
 
     override fun onSaveRequest(request: SaveRequest, callback: SaveCallback) {
         // Логика сохранения пароля, если необходимо
@@ -113,7 +124,6 @@ class MyAutofillService : AutofillService() {
     }
 }
 
-// Класс для хранения данных полей
 data class AutofillField(
     val id: AutofillId,
     val hint: Array<String>,
