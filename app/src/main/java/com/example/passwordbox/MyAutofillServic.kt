@@ -45,7 +45,7 @@ class MyAutofillService : AutofillService() {
         }
     }
 
-    private fun parseStructure(structure: AssistStructure): List<AutofillField> {
+    private fun parseStructure(structure: AssistStructure): List<AutofillField> {//представляет структуру экрана, для извлечения автоматически заполняемых полей.
         val autofillFields = mutableListOf<AutofillField>()
         val nodes = structure.windowNodeCount
 
@@ -56,7 +56,7 @@ class MyAutofillService : AutofillService() {
         return autofillFields
     }
 
-    private fun parseNode(node: AssistStructure.ViewNode, autofillFields: MutableList<AutofillField>) {
+    private fun parseNode(node: AssistStructure.ViewNode, autofillFields: MutableList<AutofillField>) {//Она проверяет свойства autofillHints, autofillType и inputType, чтобы определить, может ли поле быть автоматически заполнено. Если это так, он создает объект автозаполнения и добавляет его в список и кэш.
         val hint = node.autofillHints
         val autofillId = node.autofillId
         val autofillType = node.autofillType
@@ -81,7 +81,7 @@ class MyAutofillService : AutofillService() {
         }
     }
 
-    private fun createFillResponse(
+    private fun createFillResponse(//Функция create Fill Response создает объект FillResponse, содержащий наборы данных со значениями автоматического заполнения.
         context: Context,
         autofillFields: List<AutofillField>
     ): FillResponse? {
@@ -115,6 +115,7 @@ class MyAutofillService : AutofillService() {
         callback.onSuccess()
     }
 
+    //логи при подключении и отключении сервиса
     override fun onConnected() {
         Log.d("MyAutofillService", "Service connected")
     }

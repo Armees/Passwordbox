@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.passwordbox"
         minSdk = 26
         targetSdk = 34
-        versionCode = 10
-        versionName = "1.8"
+        versionCode = 11
+        versionName = " beta 2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.biometric:biometric:1.2.0-alpha04")
     implementation ("androidx.autofill:autofill:1.0.0")
     implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.zxing:core:3.4.1")

@@ -24,6 +24,9 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import kotlin.collections.ArrayList
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 
 
 //        val KeyManager= KeyManager(keyAlias())
@@ -562,6 +565,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val name = sharedPreferences.getString("name", "my Lord")
         hello.text = "Hello, $name"
+        authenticateWithFingerprint()
         btnCheckPassword.setOnClickListener {
             val text1 = etPwd.text.toString()
             if (text1 == password1) {
@@ -672,5 +676,51 @@ class MainActivity : AppCompatActivity() {//регистрация
         } else {
             Toast.makeText(context, "Сообщение не может быть пустым", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun authenticateWithFingerprint() {
+        val biometricManager = BiometricManager.from(this)
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                showBiometricPrompt()
+            }
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                // нет сканера отпечатка
+            }
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+                // Биометрические функции в настоящее время недоступны
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                // Пользователь не привязал никаких биометрических данных к своей учетной записи
+            }
+        }
+    }
+
+    private fun showBiometricPrompt() {
+        val executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                setupPasswordSaving()
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                authenticateWithFingerprint()
+            }
+        })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use password")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 }
