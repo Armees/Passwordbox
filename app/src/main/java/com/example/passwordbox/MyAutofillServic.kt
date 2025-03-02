@@ -1,9 +1,7 @@
 package com.example.passwordbox
 
-import android.app.PendingIntent
 import android.app.assist.AssistStructure
 import android.content.Context
-import android.content.Intent
 import android.os.CancellationSignal
 import android.service.autofill.*
 import android.text.InputType
@@ -11,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
-import android.widget.ArrayAdapter
 import android.widget.RemoteViews
 import java.io.File
 
@@ -105,7 +102,6 @@ class MyAutofillService : AutofillService() {
 
             val value1 = arr[0]
             val value2 = arr[1]
-
             val presentation1 = RemoteViews(context.packageName, R.layout.autofill_item)
             presentation1.setTextViewText(R.id.autofill_text, value1)
             datasetBuilder1.setValue(autofillId, AutofillValue.forText(value2), presentation1)
