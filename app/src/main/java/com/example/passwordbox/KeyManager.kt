@@ -3,6 +3,7 @@ package com.example.passwordbox
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import android.util.Log
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -11,46 +12,52 @@ import javax.crypto.spec.GCMParameterSpec
 
 class KeyManager(private val keyAlias: String) {
 
-    val ANDROID_KEY_STORE = "AndroidKeyStore"
-    val AES_MODE = "AES/GCM/NoPadding"
-    private var iv: ByteArray = byteArrayOf(55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44)
-    val SECRET_ALIAS = keyAlias
+    private val ANDROID_KEY_STORE = "AndroidKeyStore"
+    private val AES_MODE = "AES/GCM/NoPadding"
+    private val IV_SIZE = 12 // Рекомендуемый размер IV для GCM — 96 бит (12 байт)
+    private val TAG = "KeyManager"
 
-    private fun generateSecretKey(keyAlias: String): SecretKey {
+    private fun generateSecretKey(): SecretKey {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
-        val spec = KeyGenParameterSpec.Builder(keyAlias, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+        val spec = KeyGenParameterSpec.Builder(
+            keyAlias,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setRandomizedEncryptionRequired(false)
             .build()
-
         keyGenerator.init(spec)
         return keyGenerator.generateKey()
     }
 
-    private fun getSecretKey(keyAlias: String): SecretKey {
+    private fun getSecretKey(): SecretKey {
         val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE).apply { load(null) }
-        if (keyStore.getEntry(keyAlias, null) != null) {
-            val secretKeyEntry = keyStore.getEntry(keyAlias, null) as KeyStore.SecretKeyEntry
-            return secretKeyEntry.secretKey ?: generateSecretKey(keyAlias)
-        }
-        return generateSecretKey(keyAlias)
+        return (keyStore.getEntry(keyAlias, null) as? KeyStore.SecretKeyEntry)?.secretKey
+            ?: generateSecretKey()
     }
 
     fun encrypt(data: String): String {
         val cipher = Cipher.getInstance(AES_MODE)
-        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(SECRET_ALIAS), GCMParameterSpec(128, iv))
-        iv = cipher.iv
-        val encodedBytes = cipher.doFinal(data.toByteArray())
-        return Base64.encodeToString(encodedBytes, Base64.NO_WRAP)
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
+        val iv = cipher.iv // Получаем сгенерированный IV
+        val encryptedBytes = cipher.doFinal(data.toByteArray())
+        // Сохраняем IV в начале зашифрованного сообщения
+        val ivAndEncrypted = iv + encryptedBytes
+        val encodedString = Base64.encodeToString(ivAndEncrypted, Base64.NO_WRAP)
+        // Выводим зашифрованную строку в лог удалить нужен для проверки шифрования
+        Log.d(TAG, "Encrypted data: $encodedString")
+        return encodedString
     }
 
     fun decrypt(encrypted: String): String {
+        val ivAndEncrypted = Base64.decode(encrypted, Base64.NO_WRAP)
+        // Извлекаем IV из начала зашифрованного сообщения
+        val iv = ivAndEncrypted.copyOfRange(0, IV_SIZE)
+        val encryptedBytes = ivAndEncrypted.copyOfRange(IV_SIZE, ivAndEncrypted.size)
         val cipher = Cipher.getInstance(AES_MODE)
         val spec = GCMParameterSpec(128, iv)
-        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(SECRET_ALIAS), spec)
-        val encodedBytes = Base64.decode(encrypted, Base64.NO_WRAP)
-        val decoded = cipher.doFinal(encodedBytes)
-        return String(decoded, Charsets.UTF_8)
+        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
+        val decodedBytes = cipher.doFinal(encryptedBytes)
+        return String(decodedBytes, Charsets.UTF_8)
     }
 }
