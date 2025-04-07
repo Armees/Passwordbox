@@ -438,6 +438,11 @@ class MainActivity : AppCompatActivity() {//регистрация
             setupEditButton(editButton, arr, arr1, position)
             setupDeleteButton(deleteButton2, arr, position)
             setupCancelButton(cancelButton2)
+
+            listView1.setOnItemLongClickListener { parent, view, position, id ->
+                copyText(arr1[position])
+                true
+            }
         }
     }
 
