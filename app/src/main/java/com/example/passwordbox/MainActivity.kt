@@ -9,7 +9,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -28,6 +29,7 @@ import kotlin.collections.ArrayList
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.google.zxing.EncodeHintType
 
 
 //        val KeyManager= KeyManager(keyAlias())
@@ -64,6 +66,8 @@ class MainActivity : AppCompatActivity() {//регистрация
     }
 
 
+
+
     private fun keyAlias():String {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val keyAlias = sharedPreferences.getString("password", "")
@@ -73,19 +77,420 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
-    private fun setupPasswordSaving() {//сохранение новых паролей
+    private fun setupPasswordSaving() {
         setContentView(R.layout.activity_verify)
         val fileName = File(applicationContext.filesDir, "password.txt")
         val addNewButton = findViewById<ImageButton>(R.id.addNewButton)
         val settingsButton = findViewById<ImageButton>(R.id.settingsButton)
 
-
         listSaving()
+        setupSettingsButton(settingsButton)
+        setupAddNewButton(addNewButton, fileName)
+    }
+
+
+
+    private fun setupSettingsButton(settingsButton: ImageButton) {
         settingsButton.setOnClickListener {
             settings()
         }
+    }
 
+
+
+
+    private fun setupAddNewButton(addNewButton: ImageButton, fileName: File) {
         addNewButton.setOnClickListener {
+            setContentView(R.layout.activity_addnew)
+
+            val editText = findViewById<EditText>(R.id.editText)
+            val editText1 = findViewById<EditText>(R.id.editText1)
+            val editText2 = findViewById<EditText>(R.id.editText2)
+            val editText3 = findViewById<EditText>(R.id.editText3)
+            val saveButton = findViewById<ImageButton>(R.id.saveButton)
+            val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
+            val genButton = findViewById<ImageButton>(R.id.genButton)
+
+            setupGenButton(genButton, editText3)
+            setupSaveButton(saveButton, editText, editText1, editText2, editText3, fileName)
+            setupCancelButton2(cancelButton2)
+        }
+    }
+
+
+
+
+    private fun setupGenButton(genButton: ImageButton, editText3: EditText) {
+        genButton.setOnClickListener {
+            editText3.setText(generatePassword())
+        }
+    }
+
+
+
+
+    private fun setupSaveButton(
+        saveButton: ImageButton,
+        editText: EditText,
+        editText1: EditText,
+        editText2: EditText,
+        editText3: EditText,
+        fileName: File
+    ) {
+        saveButton.setOnClickListener {
+            val name = editText.text.toString()
+            val url = editText1.text.toString()
+            val login = editText2.text.toString()
+            val password = editText3.text.toString()
+
+            val keyManager = KeyManager(keyAlias())
+            val decryptedData = keyManager.decrypt(fileName.readText())
+            fileName.writeText(decryptedData)
+
+            fileName.appendText("$name\n$url\n$login\n$password\n")
+
+            val encryptedData = keyManager.encrypt(fileName.readText())
+            fileName.writeText(encryptedData)
+
+            clearFields(editText, editText1, editText2, editText3)
+            setupPasswordSaving()
+        }
+    }
+
+
+
+
+    private fun clearFields(vararg fields: EditText) {
+        for (field in fields) {
+            field.text.clear()
+        }
+    }
+
+
+
+
+    private fun setupCancelButton2(cancelButton2: ImageButton) {
+        cancelButton2.setOnClickListener {
+            setupPasswordSaving()
+        }
+    }
+
+
+
+
+    private fun saveTheme(theme: String, sharedPreferences: SharedPreferences) {
+        val editor = sharedPreferences.edit()
+        editor.putString("theme", theme)
+        editor.apply()
+    }
+
+
+
+
+    private fun settings() {
+        setContentView(R.layout.activity_settings)
+
+        val cancelButton = findViewById<ImageButton>(R.id.cancelImageButton)
+        val uncButton = findViewById<Button>(R.id.uncButton)
+        val pcButton = findViewById<Button>(R.id.pcButton)
+        val wipeDataButton = findViewById<Button>(R.id.wipeDataButton)
+
+        setupThemeSpinner()
+        cancelButton.setOnClickListener { setupPasswordSaving() }
+        uncButton.setOnClickListener { openNameChangeScreen() }
+        pcButton.setOnClickListener { openPasswordChangeScreen() }
+        wipeDataButton.setOnClickListener { openWipeConfirmationScreen() }
+    }
+
+
+
+
+    private fun setupThemeSpinner() {
+        val sharedPreferences = getSharedPreferences("AppThemePrefs", MODE_PRIVATE)
+        val savedTheme = sharedPreferences.getString("theme", "System")
+        val items = listOf("System", "Light", "Dark").sortedBy { if (it == savedTheme) 0 else 1 }
+
+        val spinner = findViewById<Spinner>(R.id.spinner2)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, items)
+        spinner.adapter = adapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selected = items[position]
+                when (selected) {
+                    "System" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    "Light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    "Dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                saveTheme(selected, sharedPreferences)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+    }
+
+
+
+
+    private fun openNameChangeScreen() {
+        setContentView(R.layout.activity_unc)
+
+        val editText = findViewById<EditText>(R.id.editTextUnc)
+        val saveButton = findViewById<ImageButton>(R.id.saveButtonunc)
+        val cancelButton = findViewById<ImageButton>(R.id.cancelButtonunc)
+
+        saveButton.setOnClickListener {
+            val name = editText.text.toString()
+            val prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).edit()
+            prefs.putString("name", name).apply()
+            setupPasswordSaving()
+        }
+
+        cancelButton.setOnClickListener { settings() }
+    }
+
+
+
+
+    private fun openPasswordChangeScreen() {
+        setContentView(R.layout.activity_wipedata)
+
+        val etPwd = findViewById<EditText>(R.id.editTextNumberPasswordWipe)
+        val btnCheck = findViewById<Button>(R.id.buttonWipe)
+        val cancelBtn = findViewById<ImageButton>(R.id.cancelButtonWipe)
+        val helloText = findViewById<TextView>(R.id.helloWorldText1)
+
+        val prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val name = prefs.getString("name", "my Lord")
+        val currentPassword = prefs.getString("password", "my Lord")
+
+        helloText.text = "$name, enter password"
+        btnCheck.text = "login"
+
+        btnCheck.setOnClickListener {
+            if (etPwd.text.toString() == currentPassword) {
+                openNewPasswordEntry()
+            } else {
+                settings()
+            }
+        }
+
+        cancelBtn.setOnClickListener { settings() }
+    }
+
+
+
+
+    private fun openNewPasswordEntry() {
+        setContentView(R.layout.activity_unc)
+
+        val editText = findViewById<EditText>(R.id.editTextUnc)
+        val saveButton = findViewById<ImageButton>(R.id.saveButtonunc)
+        val cancelButton = findViewById<ImageButton>(R.id.cancelButtonunc)
+        val textView = findViewById<TextView>(R.id.textView7)
+
+        textView.text = "write a new password"
+        editText.hint = "new password"
+
+        saveButton.setOnClickListener {
+            val fileName = File(applicationContext.filesDir, "password.txt")
+            val newPassword = editText.text.toString()
+
+            val keyManager = KeyManager(keyAlias())
+            fileName.writeText(keyManager.decrypt(fileName.readText()))
+
+            val prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).edit()
+            prefs.putString("password", newPassword).apply()
+
+            fileName.writeText(keyManager.encrypt(fileName.readText()))
+            setupPasswordSaving()
+        }
+
+        cancelButton.setOnClickListener { settings() }
+    }
+
+
+
+
+    private fun openWipeConfirmationScreen() {
+        setContentView(R.layout.activity_wipedata)
+
+        val etPwd = findViewById<EditText>(R.id.editTextNumberPasswordWipe)
+        val btnWipe = findViewById<Button>(R.id.buttonWipe)
+        val cancelBtn = findViewById<ImageButton>(R.id.cancelButtonWipe)
+        val hello = findViewById<TextView>(R.id.helloWorldText1)
+
+        val prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val name = prefs.getString("name", "my Lord")
+        val password = prefs.getString("password", "my Lord")
+
+        hello.setTextColor(Color.parseColor("#FA0000"))
+        btnWipe.setTextColor(Color.parseColor("#FA0000"))
+
+        hello.text = "$name, you sure?"
+        btnWipe.text = "Wipe data"
+
+        btnWipe.setOnClickListener {
+            if (etPwd.text.toString() == password) {
+                deleteAppData()
+            } else {
+                settings()
+            }
+        }
+
+        cancelBtn.setOnClickListener { settings() }
+    }
+
+
+
+
+    private fun listSaving() {
+        val listView = findViewById<ListView>(R.id.listView)
+        val fileName = File(applicationContext.filesDir, "password.txt")
+        var arr = ArrayList<String>()
+
+        val keyManager = KeyManager(keyAlias())
+        fileName.writeText(keyManager.decrypt(fileName.readText())) // расшифровка
+
+        val savedText = fileName.readText()
+        arr.addAll(splitText(savedText, 4).filter { it.isNotBlank() }) // создание списка
+
+        var arr2 = hidePassword(arr)
+        listView.adapter = ArrayAdapter(this, R.layout.navigation_item, arr2)
+
+        fileName.writeText(keyManager.encrypt(fileName.readText())) // шифровка
+
+        setupSpinner(savedText, arr, arr2, listView)
+        setupListViewClickListener(listView, arr, arr2)
+    }
+
+
+
+
+    private fun setupSpinner(savedText: String, arr: ArrayList<String>, arr2: List<String>, listView: ListView) {
+        val spinner: Spinner = findViewById(R.id.spinner)
+        val items = listOf("date", "date(reverse)", "name", "name(reverse)")
+        val adapterSpinner = ArrayAdapter(this, R.layout.spinner_item, items)
+        spinner.adapter = adapterSpinner
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> updateListView(savedText, arr, arr2, listView, false, false)
+                    1 -> updateListView(savedText, arr, arr2, listView, true, false)
+                    2 -> updateListView(savedText, arr, arr2, listView, false, true)
+                    3 -> updateListView(savedText, arr, arr2, listView, true, true)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+    }
+
+
+
+
+    private fun updateListView(savedText: String, arr: ArrayList<String>, arr2: List<String>, listView: ListView, reverse: Boolean, sortByName: Boolean) {
+        arr.clear()
+        arr.addAll(splitText(savedText, 4).filter { it.isNotBlank() })
+        var updatedArr2 = hidePassword(arr)
+
+        if (updatedArr2.size > 1) {
+            if (reverse) {
+                updatedArr2 = updatedArr2.reversed() as ArrayList<String>
+                arr.reverse()
+            }
+            if (sortByName) {
+                updatedArr2 = updatedArr2.sorted() as ArrayList<String>
+                arr.sort()
+            }
+            listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, updatedArr2)
+        }
+    }
+
+
+
+
+    private fun setupListViewClickListener(listView: ListView, arr: ArrayList<String>, arr2: List<String>) {
+        listView.setOnItemClickListener { parent, view, position, id ->
+            setContentView(R.layout.activity_edit)
+            val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
+            val deleteButton2 = findViewById<ImageButton>(R.id.deleteButton2)
+            val website = findViewById<ImageButton>(R.id.website)
+            val editButton = findViewById<ImageButton>(R.id.editButton)
+            val shareButton = findViewById<ImageButton>(R.id.shareButton)
+            val showButton = findViewById<ImageButton>(R.id.showButton)
+            val shareButton2 = findViewById<ImageButton>(R.id.shareButton2)
+            val listView1 = findViewById<ListView>(R.id.listView1)
+            val arr1 = ArrayList<String>()
+            val arr3 = ArrayList<String>()
+            var flag = true
+
+            arr1.addAll(arr[position].dropLast(1).split("\n"))
+            arr3.addAll(arr2[position].dropLast(1).split("\n"))
+
+            listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
+
+            setupShowButton(showButton, listView1, arr1, arr3, flag)
+            setupShareqrButton(shareButton, arr1)
+            setupShareButton(shareButton2, arr1)
+            setupWebsiteButton(website, arr1)
+            setupEditButton(editButton, arr, arr1, position)
+            setupDeleteButton(deleteButton2, arr, position)
+            setupCancelButton(cancelButton2)
+        }
+    }
+
+
+
+
+    private fun setupShowButton(showButton: ImageButton, listView1: ListView, arr1: ArrayList<String>, arr3: ArrayList<String>, initialFlag: Boolean) {
+        var flag = initialFlag
+        showButton.setOnClickListener {
+            flag = !flag
+
+            if (flag) {
+                listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
+                showButton.setImageResource(R.drawable.show)
+            } else {
+                listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr1)
+                showButton.setImageResource(R.drawable.notshow)
+            }
+        }
+    }
+
+
+
+
+    private fun setupShareButton(shareButton2: ImageButton, arr1: ArrayList<String>) {
+        shareButton2.setOnClickListener {
+            shareMessage(this, arrToTextShare(arr1))
+        }
+    }
+
+
+
+
+    private fun setupShareqrButton(shareButton: ImageButton, arr1: ArrayList<String>) {
+        shareButton.setOnClickListener {
+            share(arr1)
+        }
+    }
+
+
+
+
+    private fun setupWebsiteButton(website: ImageButton, arr1: ArrayList<String>) {
+        website.setOnClickListener {
+            openInBrowser(arr1[1])
+        }
+    }
+
+
+
+
+    private fun setupEditButton(editButton: ImageButton, arr: ArrayList<String>, arr1: ArrayList<String>, position: Int) {
+        editButton.setOnClickListener {
             setContentView(R.layout.activity_addnew)
 
             val editText = findViewById<EditText>(R.id.editText)
@@ -100,21 +505,24 @@ class MainActivity : AppCompatActivity() {//регистрация
                 editText3.setText(generatePassword())
             }
 
+            editText.setText(arr1[0])
+            editText1.setText(arr1[1])
+            editText2.setText(arr1[2])
+            editText3.setText(arr1[3])
+
             saveButton.setOnClickListener {
                 val password = editText3.text.toString()
                 val login = editText2.text.toString()
                 val url = editText1.text.toString()
                 val name = editText.text.toString()
 
-                val KeyManager= KeyManager(keyAlias())
-                fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
+                arr1[0] = name
+                arr1[1] = url
+                arr1[2] = login
+                arr1[3] = password
 
-                fileName.appendText(name + "\n")
-                fileName.appendText(url + "\n")
-                fileName.appendText(login + "\n")
-                fileName.appendText(password + "\n")
-
-                fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
+                arr[position] = arr1[0] + "\n" + arr1[1] + "\n" + arr1[2] + "\n" + arr1[3] + "\n"
+                passwordFile(arr)
 
                 editText.text.clear()
                 editText1.text.clear()
@@ -126,377 +534,81 @@ class MainActivity : AppCompatActivity() {//регистрация
             cancelButton2.setOnClickListener {
                 setupPasswordSaving()
             }
-
         }
     }
 
 
-    private fun saveTheme(theme: String, sharedPreferences: SharedPreferences) {
-        val editor = sharedPreferences.edit()
-        editor.putString("theme", theme)
-        editor.apply()
+
+
+    private fun setupDeleteButton(deleteButton2: ImageButton, arr: ArrayList<String>, position: Int) {
+        deleteButton2.setOnClickListener {
+            setContentView(R.layout.activity_delete)
+
+            val deleteButton = findViewById<ImageButton>(R.id.deleteButton)
+            val cancelButton = findViewById<ImageButton>(R.id.cancelButton)
+            val textView1 = findViewById<TextView>(R.id.textView1)
+            val textView2 = findViewById<TextView>(R.id.textView2)
+
+            textView1.text = "Do you want to delete?"
+            textView2.text = arr[position].substringBefore("\n")
+
+            deleteButton.setOnClickListener {
+                arr.removeAt(position)
+                passwordFile(arr)
+                setupPasswordSaving()
+            }
+            cancelButton.setOnClickListener {
+                setupPasswordSaving()
+            }
+        }
     }
 
 
-    private fun settings() {//настройки
-        setContentView(R.layout.activity_settings)
-        val cancelButton = findViewById<ImageButton>(R.id.cancelImageButton)
-        val uncButton=findViewById<Button>(R.id.uncButton)
-        val pcButton=findViewById<Button>(R.id.pcButton)
-        val wipeDataButton=findViewById<Button>(R.id.wipeDataButton)
 
-        val sharedPreferences = getSharedPreferences("AppThemePrefs", MODE_PRIVATE)
-        val savedTheme = sharedPreferences.getString("theme", "System")
-        var items2 = listOf("System","Light","Dark")
-        if (savedTheme == "System") {
-            items2=listOf("System","Light","Dark")
-        }
-        if(savedTheme == "Light"){
-            items2=listOf("Light","System","Dark")
-        }
-        if(savedTheme == "Dark"){
-            items2=listOf("Dark","System","Light")
-        }
-        val spinner: Spinner = findViewById(R.id.spinner2)
 
-        val adapterSpiner = ArrayAdapter(this, R.layout.spinner_item, items2)
-        spinner.adapter = adapterSpiner
-
-        spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
-                if(items2[position]=="System"){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    saveTheme("System", sharedPreferences)
-                }
-                if(items2[position]=="Light"){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    saveTheme("Light", sharedPreferences)
-                }
-                if(items2[position]=="Dark"){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    saveTheme("Dark", sharedPreferences)
-                }
-            }
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
-            }
-        })
-
-        cancelButton.setOnClickListener {
+    private fun setupCancelButton(cancelButton2: ImageButton) {
+        cancelButton2.setOnClickListener {
             setupPasswordSaving()
         }
-        uncButton.setOnClickListener {
-            setContentView(R.layout.activity_unc)
-            val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
-            val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
-            val cancelButtonUnc = findViewById<ImageButton>(R.id.cancelButtonunc)
-
-            saveButtonUnc.setOnClickListener {
-                val name = editTextUnc.text.toString()
-                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("name", name)
-                editor.apply()
-                setupPasswordSaving()
-            }
-            cancelButtonUnc.setOnClickListener {
-                settings()
-            }
-
-        }
-        pcButton.setOnClickListener {
-            setContentView(R.layout.activity_wipedata)
-            val cancelButtonWipe = findViewById<ImageButton>(R.id.cancelButtonWipe)
-            val etPwd = findViewById<EditText>(R.id.editTextNumberPasswordWipe)
-            val btnCheckPassword = findViewById<Button>(R.id.buttonWipe)
-            val hello = findViewById<TextView>(R.id.helloWorldText1)
-            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-            val name = sharedPreferences.getString("name", "my Lord")
-            val password1 = sharedPreferences.getString("password", "my Lord")
-            btnCheckPassword.text="login"
-            hello.text = "$name, enter password"
-            btnCheckPassword.setOnClickListener {
-                val text1 = etPwd.text.toString()
-                if (text1 == password1) {
-                    setContentView(R.layout.activity_unc)
-                    val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
-                    val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
-                    val cancelButtonUnc = findViewById<ImageButton>(R.id.cancelButtonunc)
-                    val textView7=findViewById<TextView>(R.id.textView7)
-                    saveButtonUnc.setOnClickListener {
-                        val fileName = File(applicationContext.filesDir, "password.txt")
-                        val KeyManager= KeyManager(keyAlias())
-                        fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
-                        val password = editTextUnc.text.toString()
-                        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.putString("password", password)
-                        editor.apply()
-                        val KeyManager2= KeyManager(keyAlias())
-                        fileName.writeText(KeyManager2.encrypt(fileName.readText()))//шифровка
-                        setupPasswordSaving()
-                    }
-                    cancelButtonUnc.setOnClickListener {
-                        settings()
-                    }
-                    editTextUnc.setHint("new password")
-                    textView7.text="write a new password"
-                }else {
-                    settings()
-                }
-            }
-            cancelButtonWipe.setOnClickListener {
-                settings()
-            }
-        }
-        wipeDataButton.setOnClickListener {
-            setContentView(R.layout.activity_wipedata)
-            val cancelButtonWipe = findViewById<ImageButton>(R.id.cancelButtonWipe)
-            val etPwd = findViewById<EditText>(R.id.editTextNumberPasswordWipe)
-            val btnCheckPassword = findViewById<Button>(R.id.buttonWipe)
-            val hello = findViewById<TextView>(R.id.helloWorldText1)
-            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-            val name = sharedPreferences.getString("name", "my Lord")
-            val password1 = sharedPreferences.getString("password", "my Lord")
-            hello.setTextColor(Color.parseColor("#FA0000"));
-            btnCheckPassword.setTextColor(Color.parseColor("#FA0000"));
-            btnCheckPassword.text="Wipe data"
-            hello.text = "$name, you sure?"
-            btnCheckPassword.setOnClickListener {
-                val text1 = etPwd.text.toString()
-                if (text1 == password1) {
-                    deleteAppData()
-                }else {
-                    settings()
-                }
-            }
-            cancelButtonWipe.setOnClickListener {
-                settings()
-            }
-        }
     }
 
 
 
 
-    private fun listSaving(){
-
-        val listView = findViewById<ListView>(R.id.listView)
-        val fileName = File(applicationContext.filesDir, "password.txt")
-        var arr = ArrayList<String>()
-
-        val KeyManager= KeyManager(keyAlias())
-        fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
-
-        val savedtext = fileName.readText()
-        arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
-
-        var arr2=hidePassword(arr)
-        listView.adapter = ArrayAdapter(this, R.layout.navigation_item, arr2)
-
-        fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
-
-        val spinner: Spinner = findViewById(R.id.spinner)
-        val items = listOf("date","date(reverse)","name","name(reverse)")
-        val adapterSpiner = ArrayAdapter(this, R.layout.spinner_item, items)
-        spinner.adapter = adapterSpiner
-
-        spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
-                if(position==0){
-                    arr.clear()
-                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
-                    arr2=hidePassword(arr)
-                    if(arr2.size>1){
-                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
-                    }
-                }
-                if(position==1){
-                    arr.clear()
-                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
-                    arr2=hidePassword(arr)
-                    if(arr2.size>1){
-                        arr2= arr2.reversed() as ArrayList<String>
-                        arr= arr.reversed() as ArrayList<String>
-                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
-                    }
-
-                }
-                if(position==2){
-                    arr.clear()
-                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
-                    arr2=hidePassword(arr)
-                    if(arr2.size>1){
-                        arr2= arr2.sorted().reversed().reversed() as ArrayList<String>
-                        arr= arr.sorted().reversed().reversed() as ArrayList<String>
-                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
-                    }
-                }
-                if(position==3){
-                    arr.clear()
-                    arr.addAll(splitText(savedtext,4).filter { it.isNotBlank() })//создание списка
-                    arr2=hidePassword(arr)
-                    if(arr2.size>1){
-                        arr2= arr2.sorted().reversed() as ArrayList<String>
-                        arr= arr.sorted().reversed().reversed() as ArrayList<String>
-                        listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, arr2)
-                    }
-
-                }
-            }
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
-            }
-        })
-
-        //нажатие на элемент списка
-        listView.setOnItemClickListener{parent,view,position,id->
-            setContentView(R.layout.activity_edit)
-            val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
-            val deleteButton2 = findViewById<ImageButton>(R.id.deleteButton2)
-            val website = findViewById<ImageButton>(R.id.website)
-            val editButton = findViewById<ImageButton>(R.id.editButton)
-            val shareButton = findViewById<ImageButton>(R.id.shareButton)
-            val showButton = findViewById<ImageButton>(R.id.showButton)
-            val shareButton2 = findViewById<ImageButton>(R.id.shareButton2)
-            val listView1 = findViewById<ListView>(R.id.listView1)
-            val arr1 = ArrayList<String>()
-            val arr3 = ArrayList<String>()
-            var flag =true;
-
-            arr1.addAll(arr.get(position).dropLast(1).split("\n"))
-            arr3.addAll(arr2.get(position).dropLast(1).split("\n"))
-
-            listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
-
-            showButton.setOnClickListener {
-                flag=!flag;
-
-                if(flag){
-                    listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr3)
-                    showButton.setImageResource(R.drawable.show)
-                }else{
-                    listView1.adapter = ArrayAdapter(this, R.layout.navigation_item, arr1)
-                    showButton.setImageResource(R.drawable.notshow)
-                }
-            }
-            shareButton2.setOnClickListener{
-                shareMessage(this, arrToTextShare(arr1))
-            }
-
-            website.setOnClickListener{
-                openInBrowser(arr1 [1])
-            }
-
-            shareButton.setOnClickListener{
-                share(arr1);
-            }
-            editButton.setOnClickListener{//изменение текста
-                setContentView(R.layout.activity_addnew)
-
-                val editText = findViewById<EditText>(R.id.editText)
-                val editText1 = findViewById<EditText>(R.id.editText1)
-                val editText2 = findViewById<EditText>(R.id.editText2)
-                val editText3 = findViewById<EditText>(R.id.editText3)
-                val saveButton = findViewById<ImageButton>(R.id.saveButton)
-                val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
-                val genButton = findViewById<ImageButton>(R.id.genButton)
-
-                genButton.setOnClickListener {
-                    editText3.setText(generatePassword())
-                }
-
-
-                editText.setText(arr1 [0])
-                editText1.setText(arr1 [1])
-                editText2.setText(arr1 [2])
-                editText3.setText(arr1 [3])
-
-
-                saveButton.setOnClickListener {//сохранение изменениний
-                    val password = editText3.text.toString()
-                    val login = editText2.text.toString()
-                    val url = editText1.text.toString()
-                    val name = editText.text.toString()
-
-                    arr1 [0]=name
-                    arr1 [1]=url
-                    arr1 [2]=login
-                    arr1 [3]=password
-
-                    arr [position]=arr1 [0] +"\n"+ arr1 [1]+"\n"+ arr1 [2]+"\n"+ arr1 [3]+"\n"
-                    passwordFile(arr)
-
-                    editText.text.clear()
-                    editText1.text.clear()
-                    editText2.text.clear()
-                    editText3.text.clear()
-
-                    setupPasswordSaving()
-                }
-                cancelButton2.setOnClickListener {
-                    setupPasswordSaving()
-                }
-            }
-
-            deleteButton2.setOnClickListener {//подтверждение удаления пункта списка
-                setContentView(R.layout.activity_delete)
-
-                val deleteButton = findViewById<ImageButton>(R.id.deleteButton)
-                val cancelButton = findViewById<ImageButton>(R.id.cancelButton)
-                val textView1=findViewById<TextView>(R.id.textView1)
-                val textView2=findViewById<TextView>(R.id.textView2)
-
-                textView1.text = "Do you want to delete?"
-                textView2.text = arr.get(position).substringBefore("\n")
-
-                deleteButton.setOnClickListener {
-                    arr.removeAt(position)
-                    passwordFile(arr)
-                    setupPasswordSaving()
-                }
-                cancelButton.setOnClickListener {
-                    setupPasswordSaving()
-                }
-            }
-            cancelButton2.setOnClickListener {
-                setupPasswordSaving()
-            }
-            listView1.setOnItemLongClickListener {parent,view,position,id->//долгое нажатие что бы скопировать текст из ячейки списка
-                copyText(arr1.get(position))
-                true
-            }
-        }
-    }
-
-
-    private fun share(arr1: List<String>){//вункция деления с помошью qr кода
+    private fun share(arr1: List<String>) {
         setContentView(R.layout.activity_qrcode)
+
         val qrIV = findViewById<ImageView>(R.id.IVQrcode)
         val cancelButton3 = findViewById<ImageButton>(R.id.cancelButton3)
-        val msgEdt=arr1.joinToString(separator = "\n")//преврашение масива в строку
-        cancelButton3.setOnClickListener {//кнопка для закрытия qr rкода
+        val msgEdt = arr1.joinToString(separator = "\n")
+
+        cancelButton3.setOnClickListener {
             setupPasswordSaving()
         }
+
         try {
+            val writer = QRCodeWriter()
+            val hints = mapOf(EncodeHintType.CHARACTER_SET to "UTF-8")
+            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, 300, 300, hints)
+            val pixels = IntArray(300 * 300)
 
-            val writer = QRCodeWriter()// Создается объект, который используется для генерации QR-кодов.
-            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, 300, 300)// генрация матрицы qr кода
-            val pixels = IntArray(300 * 300)//массив целых чисел для хранения цветов каждого пикселя изображения QR-кода
-
-            for (y in 0 until 300) {// проходим по каждому элементу масива и определяем какого цвета должен быть пиксель
+            for (y in 0 until 300) {
                 val offset = y * 300
                 for (x in 0 until 300) {
                     pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
                 }
             }
 
-            val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565)//бъект размером 300x300 пикселей с использованием конфигурации RGB_565 (каждый пиксель кодируется 16 битами).
-            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300)// из массива получаем картинку qr кода
-            qrIV.setImageBitmap(bitmap)// отображение qr кода
+            val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565)
+            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300)
+            qrIV.setImageBitmap(bitmap)
 
-        } catch (e: Exception) {//вывод ошибок
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+
 
 
     private fun passwordFile(arr: List<String>) {//сохранение изменений
@@ -507,6 +619,9 @@ class MainActivity : AppCompatActivity() {//регистрация
         fileName.writeText(arr.joinToString(""))
         fileName.writeText(KeyManager.encrypt(fileName.readText()))//шифровка
     }
+
+
+
 
     private fun hidePassword(arr: List<String>):List<String> {//скрытие пароля
         val arr2 = ArrayList<String>()
@@ -587,6 +702,8 @@ class MainActivity : AppCompatActivity() {//регистрация
     }
 
 
+
+
     private fun arrToTextShare(arr: List<String>):String{
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val name = sharedPreferences.getString("name", "my Lord")
@@ -602,12 +719,12 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
+
     private fun deleteAppData() {
         val packageName = applicationContext.packageName
         val runtime = Runtime.getRuntime()
         runtime.exec("pm clear $packageName")
     }
-
 
 
 
@@ -642,6 +759,7 @@ class MainActivity : AppCompatActivity() {//регистрация
 
 
 
+
     private fun generatePassword(): String {//сгенерировать сложный пароль
         val rand = ('A'..'Z') + ('a'..'z') + ('0'..'9')+'!'+'#'+'$'+'%'+'&'+'/'+'@'
         var hardpass=""
@@ -650,6 +768,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         }
         return hardpass
     }
+
 
 
 
@@ -665,6 +784,8 @@ class MainActivity : AppCompatActivity() {//регистрация
     }
 
 
+
+
     fun shareMessage(context: Context, message: String) {
         if (message.isNotEmpty()) {
             val sendIntent = Intent().apply {
@@ -678,6 +799,9 @@ class MainActivity : AppCompatActivity() {//регистрация
             Toast.makeText(context, "Сообщение не может быть пустым", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
 
     fun authenticateWithFingerprint() {
         val biometricManager = BiometricManager.from(this)
@@ -696,6 +820,9 @@ class MainActivity : AppCompatActivity() {//регистрация
             }
         }
     }
+
+
+
 
     private fun showBiometricPrompt() {
         val executor = ContextCompat.getMainExecutor(this)
