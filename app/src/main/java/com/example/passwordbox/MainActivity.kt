@@ -283,30 +283,21 @@ class MainActivity : AppCompatActivity() {//регистрация
 
     private fun openNewPasswordEntry() {
         setContentView(R.layout.activity_unc)
-
-        val editText = findViewById<EditText>(R.id.editTextUnc)
-        val saveButton = findViewById<ImageButton>(R.id.saveButtonunc)
-        val cancelButton = findViewById<ImageButton>(R.id.cancelButtonunc)
-        val textView = findViewById<TextView>(R.id.textView7)
-
-        textView.text = "write a new password"
-        editText.hint = "new password"
-
-        saveButton.setOnClickListener {
+        val editTextUnc = findViewById<EditText>(R.id.editTextUnc)
+        val saveButtonUnc = findViewById<ImageButton>(R.id.saveButtonunc)
+        saveButtonUnc.setOnClickListener {
             val fileName = File(applicationContext.filesDir, "password.txt")
-            val newPassword = editText.text.toString()
-
-            val keyManager = KeyManager(keyAlias())
-            fileName.writeText(keyManager.decrypt(fileName.readText()))
-
-            val prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).edit()
-            prefs.putString("password", newPassword).apply()
-
-            fileName.writeText(keyManager.encrypt(fileName.readText()))
+            val KeyManager= KeyManager(keyAlias())
+            fileName.writeText(KeyManager.decrypt(fileName.readText()))//расшифровка
+            val password = editTextUnc.text.toString()
+            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("password", password)
+            editor.apply()
+            val KeyManager2= KeyManager(keyAlias())
+            fileName.writeText(KeyManager2.encrypt(fileName.readText()))//шифровка
             setupPasswordSaving()
         }
-
-        cancelButton.setOnClickListener { settings() }
     }
 
 
