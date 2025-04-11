@@ -84,77 +84,55 @@ class MainActivity : AppCompatActivity() {//регистрация
         val settingsButton = findViewById<ImageButton>(R.id.settingsButton)
 
         listSaving()
-        setupSettingsButton(settingsButton)
-        setupAddNewButton(addNewButton, fileName)
-    }
-
-
-
-    private fun setupSettingsButton(settingsButton: ImageButton) {
-        settingsButton.setOnClickListener {
-            settings()
-        }
+        settingsButton.setOnClickListener { settings() }
+        addNewButton.setOnClickListener {setupAddNewButton( fileName)}
     }
 
 
 
 
-    private fun setupAddNewButton(addNewButton: ImageButton, fileName: File) {
-        addNewButton.setOnClickListener {
-            setContentView(R.layout.activity_addnew)
+    private fun setupAddNewButton( fileName: File) {
+        setContentView(R.layout.activity_addnew)
 
-            val editText = findViewById<EditText>(R.id.editText)
-            val editText1 = findViewById<EditText>(R.id.editText1)
-            val editText2 = findViewById<EditText>(R.id.editText2)
-            val editText3 = findViewById<EditText>(R.id.editText3)
-            val saveButton = findViewById<ImageButton>(R.id.saveButton)
-            val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
-            val genButton = findViewById<ImageButton>(R.id.genButton)
+        val editText = findViewById<EditText>(R.id.editText)
+        val editText1 = findViewById<EditText>(R.id.editText1)
+        val editText2 = findViewById<EditText>(R.id.editText2)
+        val editText3 = findViewById<EditText>(R.id.editText3)
+        val saveButton = findViewById<ImageButton>(R.id.saveButton)
+        val cancelButton2 = findViewById<ImageButton>(R.id.cancelButton2)
+        val genButton = findViewById<ImageButton>(R.id.genButton)
 
-            setupGenButton(genButton, editText3)
-            setupSaveButton(saveButton, editText, editText1, editText2, editText3, fileName)
-            setupCancelButton2(cancelButton2)
-        }
-    }
-
-
-
-
-    private fun setupGenButton(genButton: ImageButton, editText3: EditText) {
-        genButton.setOnClickListener {
-            editText3.setText(generatePassword())
-        }
+        genButton.setOnClickListener {editText3.setText(generatePassword())}
+        saveButton.setOnClickListener {setupSaveButton(editText, editText1, editText2, editText3, fileName)}
+        cancelButton2.setOnClickListener {setupPasswordSaving()}
     }
 
 
 
 
     private fun setupSaveButton(
-        saveButton: ImageButton,
         editText: EditText,
         editText1: EditText,
         editText2: EditText,
         editText3: EditText,
         fileName: File
     ) {
-        saveButton.setOnClickListener {
-            val name = editText.text.toString()
-            val url = editText1.text.toString()
-            val login = editText2.text.toString()
-            val password = editText3.text.toString()
+        val name = editText.text.toString()
+        val url = editText1.text.toString()
+        val login = editText2.text.toString()
+        val password = editText3.text.toString()
 
-            val keyManager = KeyManager(keyAlias())
-            val decryptedData = keyManager.decrypt(fileName.readText())
-            fileName.writeText(decryptedData)
+        val keyManager = KeyManager(keyAlias())
+        val decryptedData = keyManager.decrypt(fileName.readText())
+        fileName.writeText(decryptedData)
 
-            fileName.appendText("$name\n$url\n$login\n$password\n")
+        fileName.appendText("$name\n$url\n$login\n$password\n")
 
-            val encryptedData = keyManager.encrypt(fileName.readText())
-            fileName.writeText(encryptedData)
+        val encryptedData = keyManager.encrypt(fileName.readText())
+        fileName.writeText(encryptedData)
 
-            clearFields(editText, editText1, editText2, editText3)
-            setupPasswordSaving()
-        }
+        clearFields(editText, editText1, editText2, editText3)
+        setupPasswordSaving()
     }
 
 
@@ -164,24 +142,6 @@ class MainActivity : AppCompatActivity() {//регистрация
         for (field in fields) {
             field.text.clear()
         }
-    }
-
-
-
-
-    private fun setupCancelButton2(cancelButton2: ImageButton) {
-        cancelButton2.setOnClickListener {
-            setupPasswordSaving()
-        }
-    }
-
-
-
-
-    private fun saveTheme(theme: String, sharedPreferences: SharedPreferences) {
-        val editor = sharedPreferences.edit()
-        editor.putString("theme", theme)
-        editor.apply()
     }
 
 
@@ -227,6 +187,15 @@ class MainActivity : AppCompatActivity() {//регистрация
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+    }
+
+
+
+
+    private fun saveTheme(theme: String, sharedPreferences: SharedPreferences) {
+        val editor = sharedPreferences.edit()
+        editor.putString("theme", theme)
+        editor.apply()
     }
 
 
