@@ -356,13 +356,13 @@ class MainActivity : AppCompatActivity() {//регистрация
         var updatedArr2 = hidePassword(arr)
 
         if (updatedArr2.size > 1) {
-            if (reverse) {
-                updatedArr2 = updatedArr2.reversed() as ArrayList<String>
-                arr.reverse()
-            }
             if (sortByName) {
-                updatedArr2 = updatedArr2.sorted() as ArrayList<String>
+                updatedArr2 = ArrayList(updatedArr2.sorted())
                 arr.sort()
+            }
+            if (reverse) {
+                updatedArr2 = ArrayList(updatedArr2.reversed())
+                arr.reverse()
             }
             listView.adapter = ArrayAdapter(this@MainActivity, R.layout.navigation_item, updatedArr2)
         }
