@@ -546,6 +546,7 @@ class MainActivity : AppCompatActivity() {//регистрация
         val qrIV = findViewById<ImageView>(R.id.IVQrcode)
         val cancelButton3 = findViewById<ImageButton>(R.id.cancelButton3)
         val msgEdt = arr1.joinToString(separator = "\n")
+        val size = 300
 
         cancelButton3.setOnClickListener {
             setupPasswordSaving()
@@ -554,18 +555,18 @@ class MainActivity : AppCompatActivity() {//регистрация
         try {
             val writer = QRCodeWriter()
             val hints = mapOf(EncodeHintType.CHARACTER_SET to "UTF-8")
-            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, 300, 300, hints)
-            val pixels = IntArray(300 * 300)
+            val bitMatrix = writer.encode(msgEdt, BarcodeFormat.QR_CODE, size, size, hints)
+            val pixels = IntArray(size * size)
 
-            for (y in 0 until 300) {
-                val offset = y * 300
-                for (x in 0 until 300) {
+            for (y in 0 until size) {
+                val offset = y * size
+                for (x in 0 until size) {
                     pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
                 }
             }
 
-            val bitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.RGB_565)
-            bitmap.setPixels(pixels, 0, 300, 0, 0, 300, 300)
+            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
             qrIV.setImageBitmap(bitmap)
 
         } catch (e: Exception) {
