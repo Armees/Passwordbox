@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -547,6 +548,16 @@ class MainActivity : AppCompatActivity() {//регистрация
         val cancelButton3 = findViewById<ImageButton>(R.id.cancelButton3)
         val msgEdt = arr1.joinToString(separator = "\n")
         val size = 300
+        var color1= Color.BLACK
+        var color2= Color.WHITE
+
+        if (isDarkTheme(this)) { //темная тема
+            color1= Color.WHITE
+            color2= Color.BLACK
+        } else { //светлая тема
+            color1= Color.BLACK
+            color2= Color.WHITE
+        }
 
         cancelButton3.setOnClickListener {
             setupPasswordSaving()
@@ -561,7 +572,7 @@ class MainActivity : AppCompatActivity() {//регистрация
             for (y in 0 until size) {
                 val offset = y * size
                 for (x in 0 until size) {
-                    pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
+                    pixels[offset + x] = if (bitMatrix[x, y]) color1 else color2
                 }
             }
 
@@ -572,6 +583,13 @@ class MainActivity : AppCompatActivity() {//регистрация
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+
+    fun isDarkTheme(context: Context): Boolean {
+        val currentNightMode = context.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
 
